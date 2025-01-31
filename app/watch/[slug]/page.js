@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button"
 import SmallThumbnail from "../../../components/small-thumbnail";
 import CommentItem from "../../../components/comment-item";
 import Player from "../../../components/player";
-import {useState, useEffect, useRef} from "react";
+import {useState, useEffect, useRef, useCallback} from "react";
 import requestData from "../../../lib/api";
 
 export default function Watch(props){
@@ -95,8 +95,19 @@ export default function Watch(props){
 
     }
 
-    useEffect(() => {
 
+    const handleScroll = useCallback(() => {
+        {
+            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 150){
+                loadRelatedVideos(loadMoreRelatedTokenRef.current);
+                loadMoreComments(loadMoreCommentTokenRef.current);
+            }
+        }
+    }, [])
+
+
+
+    useEffect(() => {
         loadVideo()
 
         window.addEventListener("scroll", handleScroll)
@@ -104,16 +115,10 @@ export default function Watch(props){
         return () => {
             window.removeEventListener("scroll", handleScroll)
         }
-    }, []);
+    }, [handleScroll]);
 
 
 
-    const handleScroll = () => {
-        if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 150){
-            loadRelatedVideos(loadMoreRelatedTokenRef.current);
-            loadMoreComments(loadMoreCommentTokenRef.current);
-        }
-    }
 
 
     return <>
