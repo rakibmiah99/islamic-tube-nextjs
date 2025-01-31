@@ -13,9 +13,10 @@ export default function SmallThumbnail(props){
                         <Image
                             // height="80"
                             // width="150"
+                            alt={data.title}
                             layout='fill'
                             src={data?.thumbnail}
-                            alt="Image" className="rounded-md object-cover"/>
+                            className="rounded-md object-cover"/>
                     </AspectRatio>
                 </div>
 

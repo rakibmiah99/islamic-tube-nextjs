@@ -13,35 +13,106 @@ import { Button } from "@/components/ui/button"
 import SmallThumbnail from "../../../components/small-thumbnail";
 import CommentItem from "../../../components/comment-item";
 import Player from "../../../components/player";
-import {useState, useEffect} from "react";
+import {useState, useEffect, useRef} from "react";
 import requestData from "../../../lib/api";
 
 export default function Watch(props){
 
+    const loadMoreRelatedTokenRef = useRef(null);
+    const loadMoreCommentTokenRef = useRef(null);
+    const isFetchingRef = useRef(false);
+    const isFetchingCommentRef = useRef(false);
     const [videoInfo, setVideoInfo] = useState({});
     const [relatedVideos , setRelatedVideos] = useState({
         loading: true,
-        next_load_offset: 0,
         data: []
     });
-    useEffect(() => {
-        async function loadVideo(){
-            const response = await requestData('/video/'+props.params.slug);
-            const figure = response.figure;
-            setVideoInfo(figure);
-            setRelatedVideos({
+
+    const [comments, setComments] = useState({
+        loading: true,
+        data: []
+    });
+
+    async function loadVideo(){
+        const response = await requestData('/video/'+props.params.slug);
+        const figure = response.figure;
+        setVideoInfo(figure);
+        setRelatedVideos({
+            loading: false,
+            data: figure.related_videos.data
+        })
+
+        setComments({
+            loading: false,
+            data: figure.comments.data
+        })
+
+
+
+        loadMoreRelatedTokenRef.current = figure.related_videos.token
+        loadMoreCommentTokenRef.current = figure.comments.token
+    }
+
+    async function loadRelatedVideos(token){
+
+        if (isFetchingRef.current) return;
+        isFetchingRef.current = true;
+
+
+        try {
+            const response = await requestData('/video/'+token+'/more-related')
+            loadMoreRelatedTokenRef.current = response?.figure.token;
+
+            setRelatedVideos((prevState) => ({
                 loading: false,
-                next_load_offset: figure.related_videos.next_load_offset,
-                data: figure.related_videos.data
-            })
+                data: [...prevState.data, ...response?.figure.data ?? []]
+            }))
+        }
+        finally {
+            isFetchingRef.current = false;
         }
 
-        loadVideo();
+    }
+
+    async function loadMoreComments(token){
+
+        if (isFetchingCommentRef.current) return;
+        isFetchingCommentRef.current = true;
+
+
+        try {
+            const response = await requestData('/video/'+token+'/more-comments')
+            loadMoreCommentTokenRef.current = response?.figure.token;
+
+            setComments((prevState) => ({
+                loading: false,
+                data: [...prevState.data, ...response?.figure.data ?? []]
+            }))
+        }
+        finally {
+            isFetchingCommentRef.current = false;
+        }
+
+    }
+
+    useEffect(() => {
+
+        loadVideo()
+
+        window.addEventListener("scroll", handleScroll)
+
+        return () => {
+            window.removeEventListener("scroll", handleScroll)
+        }
     }, []);
 
 
-    const handlePlayError =  () => {
-        alert('hello')
+
+    const handleScroll = () => {
+        if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 150){
+            loadRelatedVideos(loadMoreRelatedTokenRef.current);
+            loadMoreComments(loadMoreCommentTokenRef.current);
+        }
     }
 
 
@@ -50,7 +121,7 @@ export default function Watch(props){
         <div className="flex">
             <div className="basis-8/12 space-y-3 pe-3">
                 <div className="player h-[460px]" style={{background: `url('${videoInfo?.thumbnail}')`}}>
-                    <Player onError={handlePlayError} url={videoInfo?.video_url}/>
+                    <Player url={videoInfo?.video_url}/>
                 </div>
                 <h1 className="text-lg font-semibold">{videoInfo?.title}</h1>
                 <div className="flex space-x-4">
@@ -114,8 +185,8 @@ export default function Watch(props){
 
                     <div className="all-comments-area">
                         <ul className="comments-list mt-5 space-y-5">
-                            {new Array(25).fill(0).map((item, index) => (
-                                <CommentItem key={index}/>
+                            {comments.data.map((item, index) => (
+                                <CommentItem data={item} key={index}/>
                             ))}
                         </ul>
                     </div>
