@@ -35,22 +35,22 @@ export default function Watch(props){
 
     async function loadVideo(){
         const response = await requestData('/video/'+props.params.slug);
-        const figure = response.figure;
+        const figure = response?.figure;
         setVideoInfo(figure);
         setRelatedVideos({
             loading: false,
-            data: figure.related_videos.data
+            data: figure?.related_videos.data ?? []
         })
 
         setComments({
             loading: false,
-            data: figure.comments.data
+            data: figure?.comments.data ?? []
         })
 
 
 
-        loadMoreRelatedTokenRef.current = figure.related_videos.token
-        loadMoreCommentTokenRef.current = figure.comments.token
+        loadMoreRelatedTokenRef.current = figure?.related_videos.token ?? null;
+        loadMoreCommentTokenRef.current = figure?.comments.token ?? null;
     }
 
     async function loadRelatedVideos(token){
@@ -99,8 +99,15 @@ export default function Watch(props){
     const handleScroll = useCallback(() => {
         {
             if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 150){
-                loadRelatedVideos(loadMoreRelatedTokenRef.current);
-                loadMoreComments(loadMoreCommentTokenRef.current);
+                if (loadMoreRelatedTokenRef){
+                    loadRelatedVideos(loadMoreRelatedTokenRef.current);
+                }
+
+                if(loadMoreCommentTokenRef.current){
+                    loadMoreComments(loadMoreCommentTokenRef.current);
+                }
+
+
             }
         }
     }, [])
