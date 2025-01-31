@@ -199,10 +199,5 @@ export default function Watch(props){
                 ))}
             </div>
         </div>
-
-
-        <style jsx>{`
-            
-        `}</style>
     </>
 }
