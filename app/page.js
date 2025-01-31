@@ -1,7 +1,7 @@
 'use client'
 
 import ThumbnailCard from "@/components/thumbnail-card";
-import {useEffect, useState, useRef} from "react";
+import {useEffect, useState, useRef, useCallback} from "react";
 import requestData from "@/lib/api";
 import Link from "next/link";
 
@@ -42,11 +42,11 @@ export default function Home() {
 
     }
 
-    const handleScroll = () => {
+    const handleScroll = useCallback( () => {
         if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 150){
             loadVideos(nextOffsetRef.current);
         }
-    }
+    }, [])
 
     //load data first time
     useEffect(() => {
@@ -57,7 +57,7 @@ export default function Home() {
         return () => {
             window.removeEventListener("scroll", handleScroll)
         }
-    }, [])
+    }, [handleScroll])
 
 
   return <>

@@ -1,5 +1,4 @@
 import {
-    Calendar,
     Home,
     Settings,
     History,
