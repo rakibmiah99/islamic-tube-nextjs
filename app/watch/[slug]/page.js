@@ -133,7 +133,7 @@ export default function Watch(props){
         <div className="flex">
             <div className="basis-8/12 space-y-3 pe-3">
                 <div className="player h-[460px]" style={{background: `url('${videoInfo?.thumbnail}')`}}>
-                    <Player url={videoInfo?.video_url}/>
+                    <Player video_id={videoInfo?.video_id}/>
                 </div>
                 <h1 className="text-lg font-semibold">{videoInfo?.title}</h1>
                 <div className="flex space-x-4">

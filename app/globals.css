@@ -101,3 +101,15 @@ body {
   width: 18px!important;
 }
 
+
+.surah-card:hover{
+  @apply border-black;
+}
+
+.surah-card:hover .surah-number, .surah-card:hover .surah-number-box{
+  @apply bg-black text-white;
+}
+
+.surah-card:hover .surah-bangla-name, .surah-card:hover .surah-ayath{
+  @apply text-black font-bold;
+}

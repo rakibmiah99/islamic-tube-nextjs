@@ -34,7 +34,7 @@ const items = [
     },
     {
         title: "কুরআনের তফসির",
-        url: "#",
+        url: "/quran",
         icon: LiaQuranSolid,
     },
     {
