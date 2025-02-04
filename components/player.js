@@ -26,14 +26,14 @@ const options = {
 
 
 export default function Player(props){
-    const url = props.url ?? '';
+    const video_id = props.video_id ?? '';
     const provider = props.provider ?? 'youtube';
     const [playType, setPlayType] = useState('poster');
     const videoSrc = {
         type: "video",
         sources: [
             {
-                src: url,
+                src: video_id,
                 provider: provider
             }
         ]
