@@ -40,6 +40,7 @@ export default function Player(props){
     };
 
     const changeState = () => {
+        return console.log('poster');
         if (playType === 'poster') {
             setPlayType(provider)
         }
@@ -48,7 +49,7 @@ export default function Player(props){
         }
     }
     return <>
-        <button className="absolute" onClick={changeState}>Click To Play</button>
+        <button className="absolute" onClick={changeState}>Click To Play Crc</button>
 
         {
             playType === 'poster' ? <></> : <Plyr key={Math.random()}  source={videoSrc} options={options} />

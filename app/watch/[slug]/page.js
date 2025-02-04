@@ -122,7 +122,7 @@ export default function Watch(props){
         return () => {
             window.removeEventListener("scroll", handleScroll)
         }
-    }, [handleScroll]);
+    }, [loadVideo, handleScroll]);
 
 
 
