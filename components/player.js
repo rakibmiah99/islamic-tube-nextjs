@@ -1,7 +1,7 @@
 import Plyr from "plyr-react";
 import "plyr-react/plyr.css";
 import { useState } from "react";
-import { FaRegCirclePlay } from "react-icons/fa6";
+import {FaPlay} from "react-icons/fa6";
 
 const options = {
   autoplay: true,
@@ -32,7 +32,6 @@ const options = {
     iv_load_policy: 3, // Disable annotations
   },
 
-  poster: "http://admin.programmingwithrakib.com/files/675834a784299.png",
 };
 
 export default function Player(props) {
@@ -50,7 +49,7 @@ export default function Player(props) {
   };
 
   const changeState = () => {
-    return console.log("poster", props.video_id, props.provider);
+    // return console.log("poster", videoSrc);
     if (playType === "poster") {
       setPlayType(provider);
     } else {
@@ -59,20 +58,17 @@ export default function Player(props) {
   };
   return (
     <>
-      <div
-        onClick={changeState}
-        className="relative bg-[#000000c9] backdrop-blur-sm w-full h-full"
-      >
-        <button className="absolute top-1/2 left-1/2">
-          <FaRegCirclePlay className="text-5xl text-white animate-pulse" />
-        </button>
-      </div>
-
       {playType === "poster" ? (
-        <></>
+          <div
+              onClick={changeState}
+              className="relative flex justify-center items-center bg-[#00000000] /*backdrop-blur-sm*/ w-full h-full"
+          >
+            <button className="absolute bg-blue-400 p-4 rounded-full">
+              <FaPlay className="text-[40px] ps-2  text-white"/>
+            </button>
+          </div>
       ) : (
-        <Plyr key={Math.random()} source={videoSrc} options={options} />
-        // <video src=""></video>
+          <Plyr source={videoSrc} options={options} />
       )}
     </>
   );

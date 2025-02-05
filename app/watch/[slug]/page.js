@@ -110,7 +110,7 @@ export default function Watch(props) {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [loadVideo, handleScroll]);
+  }, []);
 
   return (
     <>
@@ -118,10 +118,10 @@ export default function Watch(props) {
       <div className="flex">
         <div className="basis-8/12 space-y-3 pe-3">
           <div
-            className="player h-[460px]"
-            style={{ background: `url('${videoInfo?.thumbnail}')` }}
+            className="player h-[450px]"
+            style={{ backgroundImage: `url('${videoInfo?.thumbnail}')`, backgroundSize:"contain" }}
           >
-            <Player video_id={videoInfo?.video_id} provider={videoInfo} />
+            <Player video_id={videoInfo?.video_id} provider={videoInfo.provider} />
           </div>
           <h1 className="text-lg font-semibold">{videoInfo?.title}</h1>
           <div className="flex space-x-4">
