@@ -1,7 +1,7 @@
 import Plyr from "plyr-react";
 import "plyr-react/plyr.css";
 import { useState } from "react";
-import {FaPlay} from "react-icons/fa6";
+import { FaPlay } from "react-icons/fa6";
 
 const options = {
   autoplay: true,
@@ -31,25 +31,25 @@ const options = {
     cc_lang_pref: "en", // Prefer English captions
     iv_load_policy: 3, // Disable annotations
   },
-
 };
 
-export default function Player(props) {
-  const video_id = props.video_id ?? "";
-  const provider = props.provider ?? "youtube";
+export default function Player({ video_id, provider, ...rest }) {
+  const video_id_1 = video_id ?? "";
+  const provider_1 = provider ?? "youtube";
   const [playType, setPlayType] = useState("poster");
   const videoSrc = {
     type: "video",
     sources: [
       {
-        src: video_id,
-        provider: provider,
+        src: video_id_1,
+        provider: provider_1,
       },
     ],
   };
 
   const changeState = () => {
     // return console.log("poster", videoSrc);
+    rest.setState((prev) => ({ ...prev, videoPlay: !prev.videoPlay }));
     if (playType === "poster") {
       setPlayType(provider);
     } else {
@@ -59,16 +59,16 @@ export default function Player(props) {
   return (
     <>
       {playType === "poster" ? (
-          <div
-              onClick={changeState}
-              className="relative flex justify-center items-center bg-[#00000000] /*backdrop-blur-sm*/ w-full h-full"
-          >
-            <button className="absolute bg-blue-400 p-4 rounded-full">
-              <FaPlay className="text-[40px] ps-2  text-white"/>
-            </button>
-          </div>
+        <div
+          onClick={changeState}
+          className="relative flex justify-center items-center bg-[#00000000] /*backdrop-blur-sm*/ w-full h-full"
+        >
+          <button className="absolute bg-blue-400 p-4 rounded-full">
+            <FaPlay className="text-[40px] ps-2  text-white" />
+          </button>
+        </div>
       ) : (
-          <Plyr source={videoSrc} options={options} />
+        <Plyr source={videoSrc} options={options} />
       )}
     </>
   );

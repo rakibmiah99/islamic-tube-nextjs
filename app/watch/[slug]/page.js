@@ -33,6 +33,10 @@ export default function Watch(props) {
     data: [],
   });
 
+  const [state, setState] = useState({
+    videoPlay: false,
+  })
+
   async function loadVideo() {
     const response = await requestData("/video/" + props.params.slug);
     const figure = response?.figure;
@@ -112,16 +116,27 @@ export default function Watch(props) {
     };
   }, []);
 
+  // console.log(state);
+
   return (
     <>
       {/*<h1>{JSON.stringify(route.params.slug)}</h1>*/}
       <div className="flex">
         <div className="basis-8/12 space-y-3 pe-3">
           <div
-            className="player h-[450px]"
-            style={{ backgroundImage: `url('${videoInfo?.thumbnail}')`, backgroundSize:"contain" }}
+            className="player h-[470px]"
+            style={{
+              backgroundImage: !state.videoPlay
+                ? `url(${videoInfo?.thumbnail})`
+                : "",
+              backgroundSize: "cover",
+            }}
           >
-            <Player video_id={videoInfo?.video_id} provider={videoInfo.provider} />
+            <Player
+              video_id={videoInfo?.video_id}
+              provider={videoInfo.provider}
+              setState={setState}
+            />
           </div>
           <h1 className="text-lg font-semibold">{videoInfo?.title}</h1>
           <div className="flex space-x-4">
