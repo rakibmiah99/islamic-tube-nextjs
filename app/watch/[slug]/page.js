@@ -124,7 +124,7 @@ export default function Watch(props) {
       <div className="flex">
         <div className="basis-8/12 space-y-3 pe-3">
           <div
-            className="player h-[470px]"
+            className="player h-[600px]"
             style={{
               backgroundImage: !state.videoPlay
                 ? `url(${videoInfo?.thumbnail})`
