@@ -16,6 +16,7 @@ import CommentItem from "../../../components/comment-item";
 import Player from "../../../components/player";
 import { useState, useEffect, useRef, useCallback } from "react";
 import requestData from "../../../lib/api";
+import Drawer from "@/components/ui/drawer";
 
 export default function Watch(props) {
   const loadMoreRelatedTokenRef = useRef(null);
@@ -117,6 +118,11 @@ export default function Watch(props) {
   }, []);
 
   // console.log(state);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  const toggleDrawer = () => {
+    setIsDrawerOpen(!isDrawerOpen);
+  };
 
   return (
     <>
@@ -193,8 +199,40 @@ export default function Watch(props) {
           <div className="description">{videoInfo?.description}</div>
 
           <div className="long-description">{videoInfo?.long_description}</div>
+          {/* phone view comment */}
+          <div className="md:hidden block">
+            <div className="flex items-center justify-between">
+              <p
+                className="mb-5 mt-0 cursor-pointer"
+                onClick={toggleDrawer} // Open the drawer on click
+              >
+                <LuMessageSquare className="inline-block me-2" />
+                <span>৩৯৪ টি মতামত</span>
+              </p>
+              <Drawer isOpen={isDrawerOpen} toggleDrawer={toggleDrawer}>
+                {/* Mobile Comment Content */}
+                <h2 className="text-lg font-semibold">আপনার মতামত দিন</h2>
+                <textarea
+                  placeholder="আপনার মতামত..."
+                  className="w-full border p-2 mt-3"
+                ></textarea>
+                <Button variant="" className="mt-2 w-full">
+                  সাবমিট
+                </Button>
 
-          <div className="comments-area space-y-2">
+                <div className="all-comments-area mt-4 h-96 overflow-y-scroll">
+                  <ul className="comments-list space-y-5">
+                    {/* Example of rendering a list of comments */}
+                    {comments?.data?.map((item, index) => (
+                      <CommentItem data={item} key={index} />
+                    ))}
+                  </ul>
+                </div>
+              </Drawer>
+            </div>
+          </div>
+          {/* desktop view comment */}
+          <div className="comments-area space-y-2 md:block hidden">
             <h2 className="text-lg flex space-x-1 items-center font-semibold">
               <LuMessageSquare />
               <span>৩৯৪ টি মতামতঃ</span>
