@@ -35,7 +35,7 @@ export default function Watch(props) {
 
   const [state, setState] = useState({
     videoPlay: false,
-  })
+  });
 
   async function loadVideo() {
     const response = await requestData("/video/" + props.params.slug);
@@ -121,10 +121,10 @@ export default function Watch(props) {
   return (
     <>
       {/*<h1>{JSON.stringify(route.params.slug)}</h1>*/}
-      <div className="flex">
-        <div className="basis-8/12 space-y-3 pe-3">
+      <div className="md:flex">
+        <div className="basis-8/12 space-y-3 md:pe-3">
           <div
-            className="player h-[600px]"
+            className="player md:h-[599px] h-[196px]"
             style={{
               backgroundImage: !state.videoPlay
                 ? `url(${videoInfo?.thumbnail})`
@@ -149,27 +149,42 @@ export default function Watch(props) {
             </div>
           </div>
 
-          <div className="flex space-x-2">
-            <Button variant="secondary" className="mt-2">
+          <div className="grid md:grid-cols-10 grid-cols-3 gap-2">
+            <Button
+              variant="secondary"
+              className="flex items-center justify-center"
+            >
               <LuThumbsUp className="me-1" />
               ২.৫ হাজার
             </Button>
 
-            <Button variant="secondary" className="mt-2">
+            <Button
+              variant="secondary"
+              className="flex items-center justify-center"
+            >
               <LuThumbsDown className="me-1" />
             </Button>
 
-            <Button variant="secondary" className="mt-2">
+            <Button
+              variant="secondary"
+              className="flex items-center justify-center"
+            >
               <LuShare2 className="me-1" />
               শেয়ার
             </Button>
 
-            <Button variant="secondary" className="mt-2">
+            <Button
+              variant="secondary"
+              className="flex items-center justify-center"
+            >
               <LuSave className="me-1" />
               সংরক্ষন
             </Button>
 
-            <Button variant="secondary" className="mt-2">
+            <Button
+              variant="secondary"
+              className="flex items-center justify-center"
+            >
               <LuFlag className="me-1" />
               রিপোর্ট
             </Button>
