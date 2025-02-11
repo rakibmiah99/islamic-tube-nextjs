@@ -18,7 +18,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import requestData from "../../../lib/api";
 import Drawer from "@/components/ui/drawer";
 
-export default function Watch(props) {
+export default function Page(props) {
   const loadMoreRelatedTokenRef = useRef(null);
   const loadMoreCommentTokenRef = useRef(null);
   const isFetchingRef = useRef(false);
@@ -130,7 +130,7 @@ export default function Watch(props) {
       <div className="md:flex">
         <div className="basis-8/12 space-y-3 md:pe-3">
           <div
-            className="player md:h-[599px] h-[196px]"
+            className={!state.videoPlay ? 'player md:h-[450px] h-[200px]': 'player'}
             style={{
               backgroundImage: !state.videoPlay
                 ? `url(${videoInfo?.thumbnail})`

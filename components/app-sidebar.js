@@ -44,22 +44,22 @@ const items = [
     },
     {
         title: "ওয়াচ হিস্টরি",
-        url: "#",
+        url: "/watch-history",
         icon: History,
     },
     {
         title: "পছন্দনীয় ভিডিও",
-        url: "#",
+        url: "/liked-video",
         icon: ThumbsUp,
     },
     {
         title: "প্লে লিস্ট সমূহ",
-        url: "#",
+        url: "my-playlist",
         icon: GalleryThumbnails,
     },
     {
         title: "একাউন্ট",
-        url: "#",
+        url: "account",
         icon: User,
     },
     {

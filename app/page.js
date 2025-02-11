@@ -64,7 +64,7 @@ export default function Home() {
       <div className="flex flex-wrap">
           {videos.data.map((item, index) => {
               return (
-                  <Link key={index} href={'/watch/'+item.slug} className='basis-4/4 md:basis-2/4 lg:basis-1/3 xl:basis-1/4 '>
+                  <Link key={index} href={'/watch/'+item.slug} className='basis-4/4 md:basis-2/4 w-full lg:basis-1/3 xl:basis-1/4 '>
                       <ThumbnailCard data={item} className=' p-2 mb-2 border-0 shadow-none border-b rounded-md' />
                   </Link>
               );

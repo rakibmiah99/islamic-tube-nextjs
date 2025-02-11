@@ -9,6 +9,9 @@ import {Button} from "@/components/ui/button";
 
 import "./globals.css";
 import {IoSearch} from "react-icons/io5";
+import Link from "next/link";
+import {LuArrowUpRight, LuSearch} from "react-icons/lu";
+import {SearchBar} from "@/components/searchbar";
 
 
 const HindSiliguri = Hind_Siliguri({
@@ -26,6 +29,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+
   return (
     <html lang="en">
     <body
@@ -34,20 +39,13 @@ export default function RootLayout({
     <SidebarProvider>
         <AppSidebar/>
         <main className="w-full mx-1 xl:mx-5">
-            <div className="w-full sticky top-0 z-20 bg-white py-1 xl:py-3 overflow-hidden flex justify-start items-start">
+            <div className="w-full sticky top-0 z-20 bg-white py-1 xl:py-3 flex justify-start items-start">
                 <SidebarTrigger className='mt-2 bg-gray-300'/>
-                <div className="px-2 xl:px-7 flex justify-end w-full mt-2 xl:mt-1">
-                    <div className="flex w-full justify-center max-w-sm items-center space-x-2">
-                        <Input type="email" placeholder="খুজুন......"/>
-                        <Button type="submit">
-                            <IoSearch/>
-                        </Button>
-                    </div>
-                </div>
+                <SearchBar/>
             </div>
 
 
-            <div className='mt-6'>
+            <div className='mt-6 h-5/6'>
                 {children}
             </div>
 
