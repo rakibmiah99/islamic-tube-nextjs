@@ -2,7 +2,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 export default function QuranHomePage(){
     return <>
-        <Tabs defaultValue="account" className="rounded-0">
+        <Tabs defaultValue="surah" className="rounded-0">
             <TabsList className="bg-gray-100 rounded">
                 <TabsTrigger value="surah">সূরাহ</TabsTrigger>
                 <TabsTrigger value="para">প্যারা</TabsTrigger>
@@ -12,7 +12,7 @@ export default function QuranHomePage(){
                 <TabsContent value="surah">
                     <div className='flex flex-wrap'>
                         {new Array(114).fill(0).map((item, index) => (
-                            <div key={index} className='basis-1/2 md:basis-1/2 lg:basis-1/3 p-1'>
+                            <div key={index} className='w-full md:basis-1/2 lg:basis-1/3 p-1'>
                                 <div className=" surah-card rounded justify-between items-center border flex border-gray-300 p-5 space-x-10">
                                     <div className='flex items-center'>
                                         <p className="relative h-[40px]  flex justify-center items-center rounded-2 w-[40px] me-5">
