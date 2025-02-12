@@ -3,18 +3,12 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/app-sidebar"
 
 
-import {Hind_Siliguri} from 'next/font/google'
-import {Input} from "@/components/ui/input";
-import {Button} from "@/components/ui/button";
-
+import {Hind_Siliguri, Noto_Sans_Bengali, Tiro_Bangla} from 'next/font/google'
 import "./globals.css";
-import {IoSearch} from "react-icons/io5";
-import Link from "next/link";
-import {LuArrowUpRight, LuSearch} from "react-icons/lu";
 import {SearchBar} from "@/components/searchbar";
 
 
-const HindSiliguri = Hind_Siliguri({
+const HindSiliguri = Noto_Sans_Bengali({
     subsets: ['latin', 'bengali'], // Bengali subset for proper rendering
     weight: ['400', '600', '700'], // Add the weights you need
 });

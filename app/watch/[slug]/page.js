@@ -17,6 +17,7 @@ import Player from "../../../components/player";
 import { useState, useEffect, useRef, useCallback } from "react";
 import requestData from "../../../lib/api";
 import Drawer from "@/components/ui/drawer";
+import {formatNumber} from "../../../lib/utils";
 
 export default function Page(props) {
   const loadMoreRelatedTokenRef = useRef(null);
@@ -148,20 +149,20 @@ export default function Page(props) {
           <div className="flex space-x-4">
             <div className="watch-count flex items-center text-gray-600 text-sm">
               <LuClock className="me-1" />
-              ২৫ হাজার বার ভিডিওটি দেখা হয়েছে
+              {formatNumber(videoInfo?.watch_count + 1)} বার ভিডিওটি দেখা হয়েছে
             </div>
             <div className="watch-count flex items-center text-gray-600 text-sm">
               <LuCalendar className="me-1" />২ বছর আগের ভিডিও
             </div>
           </div>
 
-          <div className="grid md:grid-cols-10 grid-cols-3 gap-2">
+          <div className="grid md:grid-cols-6 lg:grid-8 grid-cols-3 gap-2">
             <Button
               variant="secondary"
               className="flex items-center justify-center"
             >
               <LuThumbsUp className="me-1" />
-              ২.৫ হাজার
+              {formatNumber(videoInfo?.likes_count)}
             </Button>
 
             <Button
@@ -207,7 +208,7 @@ export default function Page(props) {
                 onClick={toggleDrawer} // Open the drawer on click
               >
                 <LuMessageSquare className="inline-block me-2" />
-                <span>৩৯৪ টি মতামত</span>
+                <span>{formatNumber(videoInfo?.comments_count)} টি মতামত</span>
               </p>
               <Drawer isOpen={isDrawerOpen} toggleDrawer={toggleDrawer}>
                 {/* Mobile Comment Content */}
@@ -216,7 +217,7 @@ export default function Page(props) {
                   placeholder="আপনার মতামত..."
                   className="w-full border p-2 mt-3"
                 ></textarea>
-                <Button variant="" className="mt-2 w-full">
+                <Button variant=""  disabled className="mt-2 w-full">
                   সাবমিট
                 </Button>
 
@@ -235,7 +236,7 @@ export default function Page(props) {
           <div className="comments-area space-y-2 md:block hidden">
             <h2 className="text-lg flex space-x-1 items-center font-semibold">
               <LuMessageSquare />
-              <span>৩৯৪ টি মতামতঃ</span>
+              <span>{formatNumber(videoInfo?.comments_count)} টি মতামতঃ</span>
             </h2>
             <textarea
               placeholder="আপনার মতামত..."

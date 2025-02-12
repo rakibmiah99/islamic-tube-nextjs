@@ -16,7 +16,6 @@ import {
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 import {Tabs, TabsList, TabsTrigger} from "@radix-ui/react-tabs";
-import {jsx} from "react/jsx-runtime";
 
 
 export default function Page(){
