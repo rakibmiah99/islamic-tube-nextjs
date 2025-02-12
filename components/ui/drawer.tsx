@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 type DrawerProps = {
   children: React.ReactNode;
   isOpen: boolean;

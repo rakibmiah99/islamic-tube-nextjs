@@ -95,7 +95,7 @@ export default function Page(){
                 <div>
                     {new Array(15).fill(0).map((_, i) => (
                         <>
-                            <div className='flex'>
+                            <div key={i} className='flex' >
                                 <div className='action-buttons basis-2/12'>
                                     <div className='flex space-y-1 flex-col text-sm'>
                                         <button className='action-btn text-start'>

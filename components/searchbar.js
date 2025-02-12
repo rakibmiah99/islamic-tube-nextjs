@@ -33,7 +33,7 @@ export function SearchBar() {
                     <ul>
                         <li>
                             {new Array(10).fill(0).map((_, i) => (
-                                <Link href='#'
+                                <Link href='#' key={i}
                                       className='flex p-2  hover:bg-gray-50 items-center justify-between space-x-2'>
                                     <div className='flex items-center space-x-2'>
                                         <LuSearch/>

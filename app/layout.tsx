@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/app-sidebar"
 
-
-import {Hind_Siliguri, Noto_Sans_Bengali, Tiro_Bangla} from 'next/font/google'
+// Hind_Siliguri, Tiro_Bangla
+import {Noto_Sans_Bengali} from 'next/font/google'
 import "./globals.css";
 import {SearchBar} from "@/components/searchbar";
 
