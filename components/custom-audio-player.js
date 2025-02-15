@@ -22,19 +22,22 @@ export default function CustomAudioPlayer (props){
 
             // defaultDuration={<></>}
             showFilledVolume={true}
-            showSkipControls={false}
-            showJumpControls={true}
+            showSkipControls={true}
+            showJumpControls={false}
             customAdditionalControls={additionalControll}
             customControlsSection={
                 [
                     RHAP_UI.ADDITIONAL_CONTROLS,
                     RHAP_UI.MAIN_CONTROLS,
-                    <Button variant='' onClick={props.onClick} className={'rounded-full h-[30px] w-[30px] ms-2'}>
+                    <Button variant='' onClick={props.handleClose} className={'rounded-full h-[30px] w-[30px] ms-2'}>
                         <LuX/>
                     </Button>,
                     RHAP_UI.VOLUME_CONTROLS,
                 ]
             }
+            onClickNext={props.handleNext}
+            onClickPrevious={props.handlePrev}
+            onEnded={props.handleEnd}
         />
     </>
 }

@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/breadcrumb"
 import {Tabs, TabsList, TabsTrigger} from "@radix-ui/react-tabs";
 import {useEffect, useRef, useState} from "react";
+import {useRouter} from "next/navigation";
 import CustomAudioPlayer from "../../../../components/custom-audio-player";
 import requestData from "../../../../lib/api";
 import {formatNumber} from "../../../../lib/utils";
@@ -26,40 +27,99 @@ import {Button} from "../../../../components/ui/button";
 
 export default function Page(props){
     const surah_number = props.params.number;
-
     const playButtonRef = useRef(null)
-
+    const router = useRouter();
     const [isTopic, setTopic] = useState(true);
     const [surahs, setSurahs] = useState([])
-
     /* surahDetails contain two property `surah` as object and `ayahs` as array */
     const [surahDetails, setSurahDetails] = useState({})
     const [numberOfAyahs, setNumberOfAyahs] = useState([])
     const [audioUrl, setAudioUrl] = useState(null)
+    const [audioTrack, setAudioTrack] = useState({
+        prev_index: null,
+        next_index: null,
+        current_index: null,
+    })
 
     const handeQuranTopicSidebar = () => {
         setTopic(!isTopic);
     }
 
+    const goToAyah = (id) => {
+        router.push(`#number-in-surah-${id}`);
+
+        setTimeout(() => {
+            const element = document.getElementById(`number-in-surah-${id}`);
+            const container = document.getElementById("quran-read-section");
+
+            if (element && container) {
+                const elementPosition = element.offsetTop; // এলিমেন্ট কতটুকু উপরে আছে
+                const containerPosition = container.offsetTop; // কন্টেইনার কতটুকু উপরে আছে
+
+                console.log(elementPosition, containerPosition)
+
+                // কন্টেইনারের স্ক্রল পজিশন ঠিক করে সেট করা
+                container.scrollTo({
+                    top: elementPosition - containerPosition + 170, // একটু উপরে রাখতে -20px
+                    behavior: "smooth",
+                    block: "center"
+                });
+            }
+        }, 100);
+    };
+
     const handlePlay = (e) => {
         const audio_url = e.target.getAttribute('audio-url');
         const number_in_surah = e.target.getAttribute('number-in-surah');
-        const ayah_index = surahDetails.ayahs.findIndex(ayah => ayah.number_in_surah == number_in_surah) // if not found return -1
-        const previous_ayah_index = ayah_index <= 0 ? null : ayah_index - 1;
-        const next_ayah_index =  (ayah_index === -1 || ayah_index+1 === surahDetails.ayahs.length ) ? null : ayah_index + 1;
+        const current_ayah_index = surahDetails.ayahs.findIndex(ayah => ayah.number_in_surah == number_in_surah) // if not found return -1
+        setAudioTrackByCurrentIndex(current_ayah_index)
 
-        console.log(previous_ayah_index, next_ayah_index)
         setAudioUrl(audio_url)
+    }
+
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    function setAudioTrackByCurrentIndex(index){
+        const previous_ayah_index = index <= 0 ? null : index - 1;
+        const next_ayah_index =  (index === -1 || index === surahDetails.ayahs.length -1 ) ? null : index + 1;
+        goToAyah(index)
+        setAudioTrack({
+            prev_index: previous_ayah_index,
+            next_index: next_ayah_index,
+            current_index: index
+        })
     }
 
     const handleClose = () => {
         setAudioUrl(null)
     }
 
+    const handleNext = () => {
+        const next_index = audioTrack.next_index
+        if(next_index){
+            let ayah = surahDetails.ayahs[next_index];
+            setAudioUrl(ayah.audio_in_ar)
+            setAudioTrackByCurrentIndex(next_index)
+        }
+    }
+
+    const handlePrev = () => {
+        const prev_index = audioTrack.prev_index
+        if(prev_index){
+            let ayah = surahDetails.ayahs[prev_index];
+            setAudioUrl(ayah.audio_in_ar)
+            setAudioTrackByCurrentIndex(prev_index)
+        }
+    }
+
+    const handleEnd = () => {
+        handleNext()
+    }
+
 
     useEffect(() => {
         getSurahs();
-        getSurahDetails()
+        getSurahDetails();
     }, []);
 
     const getSurahs = async () => {
@@ -159,10 +219,10 @@ export default function Page(props){
                     </div>
                 </div>
 
-                <div className={(isTopic ? 'hidden md:block md:basis-9/12 p-5 overflow-scroll' : 'w-full')}>
+                <div className={(isTopic ? 'hidden md:block md:basis-9/12 p-5' : 'w-full')+' overflow-scroll'} id='quran-read-section'>
                     {audioUrl ?
                         <div className="fixed bottom-0 left-0 w-full bg-white shadow-md z-50">
-                            <CustomAudioPlayer onClick={handleClose} src={audioUrl}/>
+                            <CustomAudioPlayer handleEnd={handleEnd} handlePrev={handlePrev} handleNext={handleNext} handleClose={handleClose} src={audioUrl}/>
                         </div>
                         :
                         <></>
@@ -171,11 +231,11 @@ export default function Page(props){
                     <div>
                         {(surahDetails.ayahs ?? []).map((item, i) => (
                             <>
-                            <div id={'number-in-surah-' + item.number_in_surah} key={i} className='flex'>
+                            <div id={'number-in-surah-' + item.number_in_surah} key={i} className={'flex py-4 '+(surahDetails.ayahs[audioTrack.current_index]?.number_in_surah == item.number_in_surah ? 'bg-gray-100 rounded' : '')}>
                                     <div className='space-y-4 px-10 justify-between items-end w-full'>
-                                        <h1 className='text-[20px] md:text-[32px]'
+                                        <h1 className=' md:text-[24px]'
                                             style={{direction: 'rtl'}}>{item.text_in_ar}</h1>
-                                        <h3 className='md:text-[20px] text-end'>{item.text_in_bn}</h3>
+                                        <h3 className=' text-end'>{item.text_in_bn}</h3>
                                         <div className='action-buttons flex justify-end items-center mt-5'>
                                             <Button variant={'ghost'} onClick={handlePlay} ref={playButtonRef} number-in-surah={item.number_in_surah} audio-url={item.audio_in_ar} className='action-btn'>
                                                 <LuPlay/>
@@ -192,7 +252,7 @@ export default function Page(props){
                                         </div>
                                     </div>
                                 </div>
-                                <Separator className='border my-5 border-gray-100'/>
+                                <Separator className='border my-1 border-gray-100'/>
                             </>
                         ))}
 
