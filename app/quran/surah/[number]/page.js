@@ -40,7 +40,11 @@ export default function Page(props){
         next_index: null,
         current_index: null,
     })
-
+    const [ditectActivePositionAyash, setDitectActivePositionAyash] = useState({
+        juz: null,
+        page: null,
+        hizb: null,
+    })
     const handeQuranTopicSidebar = () => {
         setTopic(!isTopic);
     }
@@ -116,11 +120,42 @@ export default function Page(props){
         handleNext()
     }
 
+    const ditectAcitiveAyahs = () => {
+        let sections = document.querySelectorAll(".ayah-section");
+        let currentSection = null;
+
+        sections.forEach(section => {
+            const rect = section.getBoundingClientRect();
+            if (rect.top >= 0 && rect.top < window.innerHeight / 2) {
+                currentSection = section;
+            }
+        });
+
+        if (currentSection) {
+            const number_in_surah = currentSection.getAttribute('data-number-in-surah');
+            const ayah_details = surahDetails.ayahs.find(ayah => ayah.number_in_surah == number_in_surah)
+            if (ayah_details !== -1){
+                setDitectActivePositionAyash({
+                    hizb: ayah_details.hizb_quarter,
+                    page: ayah_details.page,
+                    juz: ayah_details.juz
+                })
+            }
+        }
+    }
+
+
+    useEffect(() => {
+        document.getElementById('quran-read-section').addEventListener('scroll', ditectAcitiveAyahs);
+        return () => {
+            document.getElementById('quran-read-section').removeEventListener('scroll', ditectAcitiveAyahs)
+        }
+    });
 
     useEffect(() => {
         getSurahs();
         getSurahDetails();
-    }, []);
+    }, [surah_number]);
 
     const getSurahs = async () => {
         const response = await requestData('/quran/surah')
@@ -164,21 +199,29 @@ export default function Page(props){
                 </div>
 
                 <div className='hidden md:block'>
-                    <Breadcrumb>
-                        <BreadcrumbList>
-                            <BreadcrumbItem>
-                                <BreadcrumbLink href="/">পাতা ২</BreadcrumbLink>
-                            </BreadcrumbItem>
-                            <BreadcrumbSeparator/>
-                            <BreadcrumbItem>
-                                <BreadcrumbLink href="/components">জুজ ১</BreadcrumbLink>
-                            </BreadcrumbItem>
-                            <BreadcrumbSeparator/>
-                            <BreadcrumbItem>
-                                <BreadcrumbPage>হিযব ১</BreadcrumbPage>
-                            </BreadcrumbItem>
-                        </BreadcrumbList>
-                    </Breadcrumb>
+
+                    {
+                        (ditectActivePositionAyash.juz && ditectActivePositionAyash.page && ditectActivePositionAyash.hizb) ?
+                            <Breadcrumb>
+                                <BreadcrumbList>
+                                    <BreadcrumbItem>
+                                        <BreadcrumbLink href="/">পাতা {formatNumber(ditectActivePositionAyash.page)}</BreadcrumbLink>
+                                    </BreadcrumbItem>
+                                    <BreadcrumbSeparator/>
+                                    <BreadcrumbItem>
+                                        <BreadcrumbLink href="/components">প্যারা {formatNumber(ditectActivePositionAyash.juz)}</BreadcrumbLink>
+                                    </BreadcrumbItem>
+                                    <BreadcrumbSeparator/>
+                                    <BreadcrumbItem>
+                                        <BreadcrumbPage>হিযব {formatNumber(ditectActivePositionAyash.hizb)}</BreadcrumbPage>
+                                    </BreadcrumbItem>
+                                </BreadcrumbList>
+                            </Breadcrumb>
+                            :
+                            <></>
+                    }
+
+
                 </div>
             </div>
 
@@ -206,8 +249,8 @@ export default function Page(props){
                                 <Input placeholder='আয়াত...'/>
                             </div>
                             <div className='h-[90%] overflow-scroll'>
-                                {numberOfAyahs.map((item) => (
-                                    <Link className='flex hover:bg-gray-50 p-2 py-3 space-x-2 ' href={'#number-in-surah-'+item} key={item}>
+                                {numberOfAyahs.map((item, i) => (
+                                    <Link className='flex hover:bg-gray-50 p-2 py-3 space-x-2 ' href={'#number-in-surah-'+item} key={i}>
                                         <span>{formatNumber(item)}</span>
                                     </Link>
                                 ))}
@@ -230,8 +273,8 @@ export default function Page(props){
 
                     <div>
                         {(surahDetails.ayahs ?? []).map((item, i) => (
-                            <>
-                            <div id={'number-in-surah-' + item.number_in_surah} key={i} className={'flex py-4 '+(surahDetails.ayahs[audioTrack.current_index]?.number_in_surah == item.number_in_surah ? 'bg-gray-100 rounded' : '')}>
+                            <div key={i}>
+                                <div data-number-in-surah={item.number_in_surah} id={'number-in-surah-' + item.number_in_surah} key={i} className={'flex py-4 ayah-section'+(surahDetails.ayahs[audioTrack.current_index]?.number_in_surah == item.number_in_surah ? 'bg-gray-100 rounded' : '')}>
                                     <div className='space-y-4 px-10 justify-between items-end w-full'>
                                         <h1 className=' md:text-[24px]'
                                             style={{direction: 'rtl'}}>{item.text_in_ar}</h1>
@@ -253,7 +296,7 @@ export default function Page(props){
                                     </div>
                                 </div>
                                 <Separator className='border my-1 border-gray-100'/>
-                            </>
+                            </div>
                         ))}
 
                         <div style={{visibility: 'hidden'}} className='h-[50px]'></div>

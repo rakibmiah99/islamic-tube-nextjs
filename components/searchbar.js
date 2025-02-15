@@ -22,7 +22,7 @@ export function SearchBar() {
         <div className="px-2 xl:px-7 flex justify-end w-full mt-2 xl:mt-1">
             <div className=" relative w-full justify-center max-w-sm ">
                 <div className='flex items-center space-x-2'>
-                    <Input autocomplete="off"  onBlur={handleBlur} onFocus={handleSearch} type="text" placeholder="খুজুন......"/>
+                    <Input autoComplete="off"  onBlur={handleBlur} onFocus={handleSearch} type="text" placeholder="খুজুন......"/>
                     <Button type="submit">
                         <IoSearch/>
                     </Button>
