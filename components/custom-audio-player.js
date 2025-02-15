@@ -29,7 +29,7 @@ export default function CustomAudioPlayer (props){
                 [
                     RHAP_UI.ADDITIONAL_CONTROLS,
                     RHAP_UI.MAIN_CONTROLS,
-                    <Button variant='' onClick={props.handleClose} className={'rounded-full h-[30px] w-[30px] ms-2'}>
+                    <Button key={1} variant='' onClick={props.handleClose} className={'rounded-full h-[30px] w-[30px] ms-2'}>
                         <LuX/>
                     </Button>,
                     RHAP_UI.VOLUME_CONTROLS,
