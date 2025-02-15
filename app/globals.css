@@ -127,7 +127,7 @@ body {
 }
 
 .action-btn{
-  @apply text-[16px] p-[8px]
+  @apply text-[16px] p-1
 }
 
 button[data-state="active"]{
@@ -137,5 +137,15 @@ button[data-state="active"]{
 
 
 .action-btn span{
-  @apply text-[16px]
+  /*@apply text-[16px]*/
+}
+
+.action-btn svg{
+  /*@apply text-[18px]*/
+}
+.action-btn{
+  @apply px-2 rounded-full
+}
+.action-btn:hover{
+  @apply bg-slate-100
 }
