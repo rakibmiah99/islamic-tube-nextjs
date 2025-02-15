@@ -45,22 +45,22 @@ export default function Page(props){
         setTopic(!isTopic);
     }
 
-    const goToAyah = (id) => {
-        router.push(`#number-in-surah-${id}`);
+    const goToAyah = (currentIndex) => {
+        const ayah = surahDetails.ayahs[currentIndex];
+        const number_in_surah = ayah.number_in_surah;
+        router.push(`#number-in-surah-${number_in_surah}`);
 
         setTimeout(() => {
-            const element = document.getElementById(`number-in-surah-${id}`);
+            const element = document.getElementById(`number-in-surah-${number_in_surah}`);
             const container = document.getElementById("quran-read-section");
 
             if (element && container) {
                 const elementPosition = element.offsetTop; // এলিমেন্ট কতটুকু উপরে আছে
                 const containerPosition = container.offsetTop; // কন্টেইনার কতটুকু উপরে আছে
 
-                console.log(elementPosition, containerPosition)
-
                 // কন্টেইনারের স্ক্রল পজিশন ঠিক করে সেট করা
                 container.scrollTo({
-                    top: elementPosition - containerPosition + 170, // একটু উপরে রাখতে -20px
+                    top: elementPosition - containerPosition, // একটু উপরে রাখতে -20px
                     behavior: "smooth",
                     block: "center"
                 });
