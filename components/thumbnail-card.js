@@ -6,7 +6,6 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
-import {IoEye} from "react-icons/io5";
 import {Clock, Eye} from "lucide-react";
 
 export default function ThumbnailCard(props) {

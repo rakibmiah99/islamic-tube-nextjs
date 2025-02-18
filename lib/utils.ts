@@ -73,7 +73,8 @@ export function encryptData(data: unknown) {
 //decrypt data
 export function decryptData(encryptedData: unknown) {
     try {
-        // @ts-ignore
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
         const bytes = CryptoJS.AES.decrypt(encryptedData, SECRET_KEY);
         return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
     } catch (error) {
