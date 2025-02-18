@@ -1,8 +1,6 @@
-import LoginProvider from "../../providers/login-provider";
+import {Login} from "../../components/auth/login";
+
 export default function Page(){
 
-    console.log('hello')
-    return <LoginProvider>
-        <h1>My Plage List Page</h1>
-    </LoginProvider>
+    return <Login/>
 }

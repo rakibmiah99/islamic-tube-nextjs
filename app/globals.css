@@ -149,3 +149,7 @@ button[data-state="active"]{
 .action-btn:hover{
   @apply bg-slate-100
 }
+
+.player{
+  @apply rounded-md overflow-hidden
+}

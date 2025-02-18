@@ -4,17 +4,19 @@ import ThumbnailCard from "@/components/thumbnail-card";
 import {useEffect, useState, useRef, useCallback} from "react";
 import requestData from "@/lib/api";
 import Link from "next/link";
+import {ThumbnailCardSkeleton} from "../components/skeleton/thumbnail-card-skeleton";
 
 
 export default function Home() {
 
     const [videos, setVideos] = useState({
-        loading: false,
+        loading: true,
         data: [],
     });
 
     const nextOffsetRef = useRef(0);
     const isFetching = useRef(false);
+
 
     async function loadVideos(offset = 0){
 
@@ -22,12 +24,17 @@ export default function Home() {
         isFetching.current = true;
 
         try {
+            setVideos((prevVideos) => ({
+                loading: true,
+                data: prevVideos.data,
+            }))
+
             const response_data = await requestData('/videos', {
                 params: {
                     offset: offset
                 }
             })
-
+            // await new Promise(resolve => setTimeout(resolve, 2000));
 
             nextOffsetRef.current = response_data.figure.query.next_offset;
 
@@ -69,6 +76,8 @@ export default function Home() {
                   </Link>
               );
           })}
+
+          {videos.loading ? <ThumbnailCardSkeleton/> : <></> }
       </div>
   </>
 }

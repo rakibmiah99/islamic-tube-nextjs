@@ -1,6 +1,5 @@
-import LoginProvider from "../../providers/login-provider";
+import {Login} from "../../components/auth/login";
+
 export default function Page(){
-    return <LoginProvider>
-        <h1>Hello</h1>
-    </LoginProvider>
+    return <Login/>
 }

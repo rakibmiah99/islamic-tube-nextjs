@@ -6,6 +6,10 @@ const nextConfig = {
                 protocol: "https",
                 hostname: "*", // Allows any hostname
             },
+            {
+                protocol: "http",
+                hostname: "*", // Allows any hostname
+            },
         ],
     },
     reactStrictMode: false

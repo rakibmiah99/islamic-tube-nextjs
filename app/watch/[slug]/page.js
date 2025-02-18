@@ -18,13 +18,14 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import requestData from "../../../lib/api";
 import Drawer from "@/components/ui/drawer";
 import {formatNumber} from "../../../lib/utils";
+import {WatchPageSkeleton} from "../../../components/skeleton/watch-page-skeleton";
 
 export default function Page(props) {
   const loadMoreRelatedTokenRef = useRef(null);
   const loadMoreCommentTokenRef = useRef(null);
   const isFetchingRef = useRef(false);
   const isFetchingCommentRef = useRef(false);
-  const [videoInfo, setVideoInfo] = useState({});
+  const [videoInfo, setVideoInfo] = useState(null);
   const [relatedVideos, setRelatedVideos] = useState({
     loading: true,
     data: [],
@@ -66,7 +67,7 @@ export default function Page(props) {
       loadMoreRelatedTokenRef.current = response?.figure.token;
 
       setRelatedVideos((prevState) => ({
-        loading: false,
+        loading: true,
         data: [...prevState.data, ...(response?.figure.data ?? [])],
       }));
     } finally {
@@ -125,9 +126,10 @@ export default function Page(props) {
     setIsDrawerOpen(!isDrawerOpen);
   };
 
-  return (
+  return (!videoInfo ?
+        <WatchPageSkeleton/>
+    :
     <>
-      {/*<h1>{JSON.stringify(route.params.slug)}</h1>*/}
       <div className="md:flex">
         <div className="basis-8/12 space-y-3 md:pe-3">
           <div
