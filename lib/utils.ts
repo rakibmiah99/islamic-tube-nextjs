@@ -1,6 +1,7 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
-
+import CryptoJS from "crypto-js"
+const SECRET_KEY = "your-secret-key";
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
@@ -31,4 +32,52 @@ export function formatNumber(num: number) {
   */
 }
 
+/* Full Name To Convert Short Name like: Rakib Miah -> RM */
+export function getInitials(fullName:string) {
+    const words = fullName.trim().split(/\s+/); // Split by spaces and remove extra spaces
 
+    if (words.length === 1) {
+        return words[0].substring(0, 2).toUpperCase(); // Take first two letters if only one word
+    }
+
+    return (words[0][0] + words[words.length - 1][0]).toUpperCase(); // First and last word initials
+}
+
+
+export function setToken(token: string){
+    token = encryptData(token)
+    localStorage.setItem('token', token)
+}
+
+export function getToken(){
+    const token =  localStorage.getItem('token');
+    return decryptData(token)
+}
+
+
+export function setLocalUser(user: object){
+    localStorage.setItem('user', encryptData(user))
+}
+
+export function getLocalUser(){
+    const user =  localStorage.getItem('user');
+    return decryptData(user)
+}
+
+
+// encrypt data 
+export function encryptData(data: unknown) {
+    return CryptoJS.AES.encrypt(JSON.stringify(data), SECRET_KEY).toString();
+}
+
+//decrypt data
+export function decryptData(encryptedData: unknown) {
+    try {
+        // @ts-ignore
+        const bytes = CryptoJS.AES.decrypt(encryptedData, SECRET_KEY);
+        return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+    } catch (error) {
+        console.error("Decryption Error:", error);
+        return null;
+    }
+}

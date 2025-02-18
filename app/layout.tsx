@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/app-sidebar"
-
+import { Toaster } from "@/components/ui/toaster"
+import {Providers} from "@/providers/providers";
 // Hind_Siliguri, Tiro_Bangla
 import {Noto_Sans_Bengali} from 'next/font/google'
 import "./globals.css";
@@ -30,22 +31,26 @@ export default function RootLayout({
     <body
         className={HindSiliguri.className}
     >
-    <SidebarProvider>
-        <AppSidebar/>
-        <main className="w-full mx-1 xl:mx-5">
-            <div className="w-full sticky top-0 z-20 bg-white py-1 xl:py-3 flex justify-start items-start">
-                <SidebarTrigger className='mt-2 bg-gray-300'/>
-                <SearchBar/>
-            </div>
+
+    <Providers>
+        <SidebarProvider>
+            <AppSidebar/>
+            <main className="w-full mx-1 xl:mx-5">
+                <div className="w-full sticky top-0 z-20 bg-white py-1 xl:py-3 flex justify-start items-start">
+                    <SidebarTrigger className='mt-2 bg-gray-300'/>
+                    <SearchBar/>
+                </div>
 
 
-            <div className='mt-6 h-5/6'>
-                {children}
-            </div>
+                <div className='mt-6 h-5/6'>
+                    {children}
+                </div>
 
-        </main>
-    </SidebarProvider>
+            </main>
+        </SidebarProvider>
 
+        <Toaster />
+    </Providers>
 
     </body>
     </html>
