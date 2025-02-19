@@ -1,0 +1,51 @@
+import {useState} from "react";
+import requestData from "../../lib/api";
+import {Loader2} from "lucide-react";
+import {LuThumbsUp} from "react-icons/lu";
+import {formatNumber} from "../../lib/utils";
+import {Button} from "../ui/button";
+
+export function LikeButton({videoInfo, setVideoInfo}){
+    const [loading, setLoading] = useState(false);
+    const handleLike = async () => {
+        setLoading(true)
+        const result = await requestData(`/video/${videoInfo.slug}/like`, {method: "POST"});
+        setLoading(false)
+        if(result){
+            const data = result.figure;
+            setVideoInfo(prevState => ({
+                ...prevState,
+                like: data.like,
+                dislike: data.dislike,
+                likes_count: data.video_likes_count
+            }))
+        }
+
+
+    }
+
+
+
+    return <>
+        <Button
+            disabled={loading}
+            onClick={handleLike}
+            variant={videoInfo?.like ? '' : 'secondary'}
+            className="flex items-center justify-center"
+        >
+            {
+                loading?
+                    <>
+                        <Loader2 className="animate-spin" />
+                    </>
+                    :
+                    <>
+                        <LuThumbsUp className="me-1" />
+                        {formatNumber(videoInfo?.likes_count)}
+                    </>
+            }
+
+        </Button>
+    </>
+}
+
