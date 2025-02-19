@@ -5,7 +5,6 @@ import {Loader2} from "lucide-react";
 import {Button} from "../ui/button";
 import AppContext from "../../context/AppContext";
 import {UnauthenticatedModal} from "../auth/unauthenticated-modal";
-import {LuThumbsDown} from "react-icons/lu";
 import {AuthProvider} from "../../providers/auth-provider";
 export function CommentAction({videoInfo, setComments, setVideoInfo}){
     const [comment, setComment] = useState('');
