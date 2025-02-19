@@ -1,16 +1,34 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import {createContext, useCallback, useEffect, useState} from "react";
 import requestData from "@/lib/api";
-import { getToken } from "@/lib/utils";
+import {getToken} from "@/lib/server-utils";
 // create context
 const AppContext = createContext();
 
-//create use app hooks
-export const useAppContext = () => useContext(AppContext);
+
 export const AppProvider = ({ children }) => {
+  const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true);
-  console.log("Use Context");
+
+
+  const checkUser = useCallback(async () => {
+    const token = await getToken();
+    if (token && !user){
+      const result = await requestData('/user/by-token/'+token, {method: 'POST'});
+      if (result){
+        const data = result.figure;
+        setUser(() => data)
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    checkUser()
+  }, [checkUser]);
+
+
+
   return (
-    <AppContext.Provider value={{ loading, setLoading }}>
+    <AppContext.Provider value={{ loading, setLoading, user, setUser }}>
       {children}
     </AppContext.Provider>
   );

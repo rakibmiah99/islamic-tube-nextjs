@@ -10,7 +10,7 @@ import { useToast } from "@/hooks/use-toast"
 import requestData from "../../../lib/api";
 import AppContext from '../../../context/AppContext'
 import {Loader2} from "lucide-react";
-import {setLocalUser, setToken} from "../../../lib/utils";
+import {setToken} from "../../../lib/server-utils";
 export default function Page(){
     const bg_image = 'https://png.pngtree.com/png-vector/20230302/ourmid/pngtree-luxury-ramadan-ramazan-with-ramadhan-lantern-ornamental-islamic-background-banner-jumma-vector-png-image_6627060.png'
     const {setUser} = useContext(AppContext)
@@ -18,25 +18,22 @@ export default function Page(){
     const [checked, setChecked] = useState(false)
     const [loading, setLoading] = useState(false)
     const [credential, setCredential] = useState({
-        email: null,
-        password: null,
+        email: 'usawayn@example.com',
+        password: 'password',
         rememberMe: false
     })
 
     const handleInput = (e) => {
-        let name = e.target.name;
-        if (name === 'email'){
-            credential.email = e.target.value;
-        }
-        else if (name === 'password'){
-            credential.password = e.target.value;
-        }
+        let {name, value} = e.target;
 
-        setCredential(credential);
+        setCredential((prevState) => ({
+            ...prevState,
+            [name]: value
+        }));
     }
 
     const handleRemember = () => {
-        setChecked(!checked)
+        setChecked((prev) => !prev)
     }
 
 
@@ -70,8 +67,7 @@ export default function Page(){
         if (response){
             const data = response.figure;
             setToken(data.token)
-            setUser(data)
-            setLocalUser(data)
+            setUser(() => data)
             toast({
                 description: response.message
             })
@@ -86,12 +82,12 @@ export default function Page(){
                 <div className='flex flex-col space-y-5'>
                     <div className="w-full flex space-y-2 flex-col">
                         <Label htmlFor="email">ই-মেইল</Label>
-                        <Input onKeyUp={handleInput} onKeyDown={handleInput} onChange={handleInput} type="email" name='email' id="email" placeholder="example@mail.com" required/>
+                        <Input value={credential.email} onChange={handleInput}  type="email" name='email' id="email" placeholder="example@mail.com" required/>
                     </div>
 
                     <div className="w-full flex space-y-2 flex-col">
                         <Label htmlFor="password">পাসওয়ার্ড</Label>
-                        <Input onKeyUp={handleInput} onKeyDown={handleInput} onChange={handleInput} className='w-full' type="password" name='password' id="password" placeholder="******" required/>
+                        <Input value={credential.password} onChange={handleInput} className='w-full' type="password" name='password' id="password" placeholder="******" required/>
                     </div>
 
                     <div className='flex items-center justify-between'>

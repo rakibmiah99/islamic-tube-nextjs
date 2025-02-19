@@ -19,6 +19,8 @@ import requestData from "../../../lib/api";
 import Drawer from "@/components/ui/drawer";
 import {formatNumber} from "../../../lib/utils";
 import {WatchPageSkeleton} from "../../../components/skeleton/watch-page-skeleton";
+import {Loader2} from "lucide-react";
+import {useToast} from "../../../hooks/use-toast";
 
 export default function Page(props) {
   const loadMoreRelatedTokenRef = useRef(null);
@@ -40,7 +42,7 @@ export default function Page(props) {
     videoPlay: false,
   });
 
-  async function loadVideo() {
+  const loadVideo = useCallback(async () => {
     const response = await requestData("/video/" + props.params.slug);
     const figure = response?.figure;
     setVideoInfo(figure);
@@ -56,7 +58,7 @@ export default function Page(props) {
 
     loadMoreRelatedTokenRef.current = figure?.related_videos.token ?? null;
     loadMoreCommentTokenRef.current = figure?.comments.token ?? null;
-  }
+  }, [props.params.slug])
 
   async function loadRelatedVideos(token) {
     if (isFetchingRef.current) return;
@@ -109,15 +111,16 @@ export default function Page(props) {
     }
   }, []);
 
+
+
   useEffect(() => {
     loadVideo();
-
     window.addEventListener("scroll", handleScroll);
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, [handleScroll, loadVideo]);
 
   // console.log(state);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -125,6 +128,8 @@ export default function Page(props) {
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
   };
+
+
 
   return (!videoInfo ?
         <WatchPageSkeleton/>
@@ -159,20 +164,10 @@ export default function Page(props) {
           </div>
 
           <div className="grid md:grid-cols-6 lg:grid-8 grid-cols-3 gap-2">
-            <Button
-              variant="secondary"
-              className="flex items-center justify-center"
-            >
-              <LuThumbsUp className="me-1" />
-              {formatNumber(videoInfo?.likes_count)}
-            </Button>
 
-            <Button
-              variant="secondary"
-              className="flex items-center justify-center"
-            >
-              <LuThumbsDown className="me-1" />
-            </Button>
+            <LikeButton videoInfo={videoInfo} setVideoInfo={setVideoInfo}/>
+
+            <DislikeButton videoInfo={videoInfo} setVideoInfo={setVideoInfo}/>
 
             <Button
               variant="secondary"
@@ -240,13 +235,8 @@ export default function Page(props) {
               <LuMessageSquare />
               <span>{formatNumber(videoInfo?.comments_count)} টি মতামতঃ</span>
             </h2>
-            <textarea
-              placeholder="আপনার মতামত..."
-              className="w-full  border p-2"
-            ></textarea>
-            <Button variant="" className="mt-2">
-              সাবমিট
-            </Button>
+
+            <CommentAction videoInfo={videoInfo} setComments={setComments} setVideoInfo={setVideoInfo}/>
 
             <hr />
 
@@ -271,4 +261,167 @@ export default function Page(props) {
       </div>
     </>
   );
+}
+
+
+export function LikeButton({videoInfo, setVideoInfo}){
+  const [loading, setLoading] = useState(false);
+  const handleLike = async () => {
+    setLoading(true)
+    const result = await requestData(`/video/${videoInfo.slug}/like`, {method: "POST"});
+    setLoading(false)
+    if(result){
+      const data = result.figure;
+      setVideoInfo(prevState => ({
+        ...prevState,
+        like: data.like,
+        dislike: data.dislike,
+        likes_count: data.video_likes_count
+      }))
+    }
+
+
+  }
+
+
+
+  return <>
+    <Button
+        disabled={loading}
+        onClick={handleLike}
+        variant={videoInfo?.like ? '' : 'secondary'}
+        className="flex items-center justify-center"
+    >
+      {
+        loading?
+          <>
+            <Loader2 className="animate-spin" />
+          </>
+          :
+          <>
+            <LuThumbsUp className="me-1" />
+            {formatNumber(videoInfo?.likes_count)}
+          </>
+      }
+
+    </Button>
+  </>
+}
+
+
+export function DislikeButton({videoInfo, setVideoInfo}){
+  const [loading, setLoading] = useState(false);
+  const handleDislike = async () => {
+    setLoading(true)
+    const result = await requestData(`/video/${videoInfo.slug}/dislike`, {method: "POST"});
+    setLoading(false)
+    if(result){
+      const data = result.figure;
+      setVideoInfo(prevState => ({
+        ...prevState,
+        like: data.like,
+        dislike: data.dislike,
+        likes_count: data.video_likes_count
+      }))
+    }
+
+
+  }
+
+
+
+  return <>
+    <Button
+        disabled={loading}
+        onClick={handleDislike}
+        variant={videoInfo?.dislike ? '' : 'secondary'}
+        className="flex items-center justify-center"
+    >
+      {
+        loading?
+            <>
+              <Loader2 className="animate-spin" />
+            </>
+            :
+            <>
+              <LuThumbsDown className="me-1" />
+            </>
+      }
+
+    </Button>
+  </>
+}
+
+
+export function CommentAction({videoInfo, setComments, setVideoInfo}){
+  const [comment, setComment] = useState('');
+  const [loading, setLoading] = useState(false);
+  const inputRef = useRef();
+  const {toast} = useToast();
+
+  const submitComment = async () => {
+    if (!comment){
+      toast({
+        variant: "destructive",
+        title: "দয়া করে আপনার মতামতটি লিখুন"
+      })
+      inputRef.current.focus()
+      return ;
+    }
+
+    setLoading(true)
+    const result = await requestData(`/video/${videoInfo.slug}/comment`, {
+      method: "POST",
+      data: {
+        body: comment
+      }
+    });
+
+    setLoading(false)
+
+    if (result){
+      const data = result.figure;
+      toast({
+        title: result.message
+      })
+      inputRef.current.value = ""
+
+      //update comments in state
+      setComments((prevState) => ({
+        ...prevState,
+        data: [data.comment, ...prevState.data]
+      }))
+
+      //update videoInfo state
+      setVideoInfo(prevState => ({
+        ...prevState,
+        comments_count: data.total_comment
+      }))
+    }
+  }
+
+  const handleInput = (e) => {
+    let {value} = e.target;
+    setComment(() => value);
+  }
+
+  return <>
+    <textarea
+        ref={inputRef}
+        onChange={handleInput}
+        placeholder="আপনার মতামত..."
+        className="w-full  border p-2"
+    ></textarea>
+    <Button onClick={submitComment} variant="" className="mt-2 min-w-20">
+      {
+        loading?
+            <>
+              <Loader2 className="animate-spin" />
+            </>
+            :
+            <>সাবমিট</>
+      }
+
+    </Button>
+  </>
 }

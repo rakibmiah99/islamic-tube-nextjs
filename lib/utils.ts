@@ -44,25 +44,7 @@ export function getInitials(fullName:string) {
 }
 
 
-export function setToken(token: string){
-    token = encryptData(token)
-    localStorage.setItem('token', token)
-}
 
-export function getToken(){
-    const token =  localStorage.getItem('token');
-    return decryptData(token)
-}
-
-
-export function setLocalUser(user: object){
-    localStorage.setItem('user', encryptData(user))
-}
-
-export function getLocalUser(){
-    const user =  localStorage.getItem('user');
-    return decryptData(user)
-}
 
 
 // encrypt data 

@@ -1,5 +1,8 @@
-import {Login} from "../../components/auth/login";
+
+import {AuthProvider} from "../../providers/auth-provider";
 
 export default function Page(){
-    return <Login/>
+    return <AuthProvider>
+        <h1>Hello</h1>
+    </AuthProvider>
 }
