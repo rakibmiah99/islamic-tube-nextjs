@@ -11,10 +11,14 @@ import requestData from "../../../lib/api";
 import AppContext from '../../../context/AppContext'
 import {Loader2} from "lucide-react";
 import {setToken} from "../../../lib/server-utils";
+import {useRouter} from "next/navigation";
+
 export default function Page(){
     const bg_image = 'https://png.pngtree.com/png-vector/20230302/ourmid/pngtree-luxury-ramadan-ramazan-with-ramadhan-lantern-ornamental-islamic-background-banner-jumma-vector-png-image_6627060.png'
-    const {setUser} = useContext(AppContext)
+    const {setUser, redirectPath} = useContext(AppContext)
     const {toast} = useToast()
+    const router = useRouter()
+
     const [checked, setChecked] = useState(false)
     const [loading, setLoading] = useState(false)
     const [credential, setCredential] = useState({
@@ -66,8 +70,9 @@ export default function Page(){
 
         if (response){
             const data = response.figure;
-            setToken(data.token)
+            await setToken(data.token)
             setUser(() => data)
+            router.push(redirectPath)
             toast({
                 description: response.message
             })

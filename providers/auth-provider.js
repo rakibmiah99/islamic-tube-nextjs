@@ -2,17 +2,18 @@
 import AppContext from "../context/AppContext";
 import {useContext} from "react";
 import {Login} from "../components/auth/login";
+import {usePathname} from "next/navigation";
 
-
-export function AuthProvider({children}) {
-    const {user} = useContext(AppContext);
+export function AuthProvider({children, variant, icon, title, description}) {
+    const {user, setRedirectPath} = useContext(AppContext);
+    const pathname  = usePathname();
+    setRedirectPath(pathname)
     if (user){
         return <>
-            <p>{user.name}</p>
             {children}
         </>
     }
     else{
-        return <Login/>
+        return <Login variant={variant} icon={icon} title={title} description={description}/>
     }
 }

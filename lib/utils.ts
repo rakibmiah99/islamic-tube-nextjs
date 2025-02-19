@@ -34,6 +34,9 @@ export function formatNumber(num: number) {
 
 /* Full Name To Convert Short Name like: Rakib Miah -> RM */
 export function getInitials(fullName:string) {
+    if (!fullName){
+        return;
+    }
     const words = fullName.trim().split(/\s+/); // Split by spaces and remove extra spaces
 
     if (words.length === 1) {

@@ -7,8 +7,8 @@ const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
   const [user, setUser] = useState(null)
+  const [redirectPath, setRedirectPath] = useState(null)
   const [loading, setLoading] = useState(true);
-
 
   const checkUser = useCallback(async () => {
     const token = await getToken();
@@ -28,7 +28,7 @@ export const AppProvider = ({ children }) => {
 
 
   return (
-    <AppContext.Provider value={{ loading, setLoading, user, setUser }}>
+    <AppContext.Provider value={{ loading, setLoading, user, setUser, redirectPath, setRedirectPath }}>
       {children}
     </AppContext.Provider>
   );

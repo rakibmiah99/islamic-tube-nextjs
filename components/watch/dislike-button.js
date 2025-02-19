@@ -1,11 +1,15 @@
-import {useState} from "react";
+import {useContext, useState} from "react";
 import requestData from "../../lib/api";
 import {Loader2} from "lucide-react";
 import {LuThumbsDown} from "react-icons/lu";
 import {Button} from "../ui/button";
-
+import AppContext from "../../context/AppContext";
+import {UnauthenticatedModal} from "../auth/unauthenticated-modal";
+import {AuthProvider} from "../../providers/auth-provider";
 export function DislikeButton({videoInfo, setVideoInfo}){
     const [loading, setLoading] = useState(false);
+    const {user} = useContext(AppContext);
+
     const handleDislike = async () => {
         setLoading(true)
         const result = await requestData(`/video/${videoInfo.slug}/dislike`, {method: "POST"});
@@ -23,7 +27,16 @@ export function DislikeButton({videoInfo, setVideoInfo}){
 
     }
 
-
+    if (!user){
+        return <UnauthenticatedModal
+            trigger={
+                <Button variant={'secondary'}>
+                    <LuThumbsDown className="me-1" />
+                </Button>
+            }
+            content={<AuthProvider variant={'modal'}/>}
+        />
+    }
 
     return <>
         <Button
