@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import SmallThumbnail from "../../../components/small-thumbnail";
 import CommentItem from "../../../components/comment-item";
 import Player from "../../../components/player";
-import { useState, useEffect, useRef, useCallback } from "react";
+import {useState, useEffect, useRef, useCallback, useMemo} from "react";
 import requestData from "../../../lib/api";
 import Drawer from "@/components/ui/drawer";
 import {formatNumber} from "../../../lib/utils";
@@ -20,20 +20,25 @@ import {WatchPageSkeleton} from "../../../components/skeleton/watch-page-skeleto
 import {LikeButton} from "../../../components/watch/like-button";
 import {DislikeButton} from "../../../components/watch/dislike-button";
 import {CommentAction} from "../../../components/watch/comment-action";
+import {CommentProtoType, RelatedVideoProtoType, VideoInfoProtoType} from "../../../lib/data-prototype";
 
 export default function Page(props) {
   const loadMoreRelatedTokenRef = useRef(null);
   const loadMoreCommentTokenRef = useRef(null);
   const isFetchingRef = useRef(false);
   const isFetchingCommentRef = useRef(false);
-  const [videoInfo, setVideoInfo] = useState(null);
+  const videoIdRef = useRef(null);
+  const videoProviderRef = useRef(null);
+  const [videoInfo, setVideoInfo] = useState({});
   const [relatedVideos, setRelatedVideos] = useState({
     loading: true,
+    error: null,
     data: [],
   });
 
   const [comments, setComments] = useState({
     loading: true,
+    error: null,
     data: [],
   });
 
@@ -42,19 +47,35 @@ export default function Page(props) {
   });
 
   const loadVideo = useCallback(async () => {
+    isFetchingRef.current = true
     const response = await requestData("/video/" + props.params.slug);
+    isFetchingRef.current = false;
     const figure = response?.figure;
-    setVideoInfo(figure);
-    setRelatedVideos({
-      loading: false,
-      data: figure?.related_videos.data ?? [],
-    });
 
-    setComments({
-      loading: false,
-      data: figure?.comments.data ?? [],
-    });
+    // Set Video Info State Data
+    setVideoInfo(() => VideoInfoProtoType(figure));
 
+    //Set Video Id And Video Provider Ref For Playing
+    videoIdRef.current = figure.video_id;
+    videoProviderRef.current = figure.provider;
+
+
+    //Set Related Video State Data
+    const related_videos_list = figure?.related_videos.data ?? [];
+    setRelatedVideos(prevState => ({
+      ...prevState,
+      data: related_videos_list.map(video => RelatedVideoProtoType(video)),
+    }));
+
+
+    // Set Comment State Data
+    const comment_list = figure?.comments.data ?? [];
+    setComments(prevState => ({
+      ...prevState,
+      data: comment_list.map(comment => CommentProtoType(comment)),
+    }));
+
+    //Set Next Load Related Video And Comment Token In Ref Value
     loadMoreRelatedTokenRef.current = figure?.related_videos.token ?? null;
     loadMoreCommentTokenRef.current = figure?.comments.token ?? null;
   }, [props.params.slug])
@@ -65,11 +86,17 @@ export default function Page(props) {
 
     try {
       const response = await requestData("/video/" + token + "/more-related");
+
+      let related_videos_list = response?.figure?.data ?? [];
+      related_videos_list = related_videos_list.map(video => RelatedVideoProtoType(video));
+
+      // Save Token For Next Load
       loadMoreRelatedTokenRef.current = response?.figure.token;
 
+      //Merge Related Video With Set Related Video State
       setRelatedVideos((prevState) => ({
-        loading: true,
-        data: [...prevState.data, ...(response?.figure.data ?? [])],
+        ...prevState,
+        data: [...prevState.data, ...related_videos_list],
       }));
     } finally {
       isFetchingRef.current = false;
@@ -82,11 +109,20 @@ export default function Page(props) {
 
     try {
       const response = await requestData("/video/" + token + "/more-comments");
+
+      let comments = response?.figure.data ?? []
+      comments = comments.map(comment => CommentProtoType(comment));
+
+      // Save Next Load Comment Token
       loadMoreCommentTokenRef.current = response?.figure.token;
 
+      // Save More Comment In Set Comment State
       setComments((prevState) => ({
         loading: false,
-        data: [...prevState.data, ...(response?.figure.data ?? [])],
+        data: [
+            ...prevState.data,
+          ...comments
+        ],
       }));
     } finally {
       isFetchingCommentRef.current = false;
@@ -129,6 +165,9 @@ export default function Page(props) {
   };
 
 
+  const memoizedPlayer = useMemo(() => (
+      <Player video_id={videoIdRef.current} provider={videoProviderRef.current} setState={setState} />
+  ), [videoIdRef.current, videoProviderRef.current]);
 
   return (!videoInfo ?
         <WatchPageSkeleton/>
@@ -145,11 +184,7 @@ export default function Page(props) {
               backgroundSize: "cover",
             }}
           >
-            <Player
-              video_id={videoInfo?.video_id}
-              provider={videoInfo.provider}
-              setState={setState}
-            />
+            {memoizedPlayer}
           </div>
           <h1 className="text-lg font-semibold">{videoInfo?.title}</h1>
           <div className="flex space-x-4">

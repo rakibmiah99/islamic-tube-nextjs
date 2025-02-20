@@ -1,3 +1,4 @@
+'use client'
 import Plyr from "plyr-react";
 import "plyr-react/plyr.css";
 import { useState } from "react";
@@ -56,6 +57,7 @@ export default function Player({ video_id, provider, ...rest }) {
       setPlayType("poster");
     }
   };
+
   return (
     <>
       {playType === "poster" ? (

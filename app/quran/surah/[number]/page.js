@@ -17,7 +17,7 @@ import {
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 import {Tabs, TabsList, TabsTrigger} from "@radix-ui/react-tabs";
-import {useEffect, useRef, useState} from "react";
+import {useCallback, useEffect, useRef, useState} from "react";
 import {useRouter} from "next/navigation";
 import CustomAudioPlayer from "../../../../components/custom-audio-player";
 import requestData from "../../../../lib/api";
@@ -145,24 +145,12 @@ export default function Page(props){
     }
 
 
-    useEffect(() => {
-        document.getElementById('quran-read-section').addEventListener('scroll', ditectAcitiveAyahs);
-        return () => {
-            document.getElementById('quran-read-section').removeEventListener('scroll', ditectAcitiveAyahs)
-        }
-    });
-
-    useEffect(() => {
-        getSurahs();
-        getSurahDetails();
-    }, [surah_number]);
-
-    const getSurahs = async () => {
+    const getSurahs = useCallback(async () => {
         const response = await requestData('/quran/surah')
         setSurahs(response?.figure ?? [])
-    }
+    }, [])
 
-    const getSurahDetails = async () => {
+    const getSurahDetails = useCallback(async () => {
         const response = await requestData('/quran/surah/'+surah_number+'/details')
         const data = response?.figure;
         setSurahDetails(data ?? {})
@@ -173,8 +161,21 @@ export default function Page(props){
         }
 
         setNumberOfAyahs(generateSurahAyaths)
+    }, [surah_number])
 
-    }
+
+    useEffect(() => {
+        document.getElementById('quran-read-section').addEventListener('scroll', ditectAcitiveAyahs);
+        return () => {
+            document.getElementById('quran-read-section').removeEventListener('scroll', ditectAcitiveAyahs)
+        }
+    });
+
+    useEffect(() => {
+        getSurahs();
+        getSurahDetails();
+    }, [getSurahs, getSurahDetails]);
+
 
 
     return <>
