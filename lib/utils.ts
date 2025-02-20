@@ -1,6 +1,8 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import CryptoJS from "crypto-js"
+
+export const BG_IMAGE = 'https://png.pngtree.com/png-vector/20230302/ourmid/pngtree-luxury-ramadan-ramazan-with-ramadhan-lantern-ornamental-islamic-background-banner-jumma-vector-png-image_6627060.png'
 const SECRET_KEY = "your-secret-key";
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -67,3 +69,6 @@ export function decryptData(encryptedData: unknown) {
         return null;
     }
 }
+
+
+

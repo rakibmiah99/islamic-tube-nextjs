@@ -1,6 +1,7 @@
 import {LuLock} from "react-icons/lu";
 import {Button} from "../ui/button";
 import Link from 'next/link'
+import {BG_IMAGE} from "../../lib/utils";
 export function Login({variant}){
     let ui = null;
 
@@ -10,7 +11,11 @@ export function Login({variant}){
         ui = defaultUi()
     }
 
-    return ui;
+    return <div style={{backgroundImage: `url(${BG_IMAGE})`}} className="login h-full bg-cover bg-no-repeat flex justify-center items-center">
+            <div className={'w-full h-full'} style={{background: 'rgba(255,255,255, 0.7)'}}>
+                {ui}
+            </div>
+        </div>;
 }
 
 

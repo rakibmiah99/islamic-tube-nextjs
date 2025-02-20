@@ -165,10 +165,14 @@ export default function Page(props){
 
 
     useEffect(() => {
-        document.getElementById('quran-read-section').addEventListener('scroll', ditectAcitiveAyahs);
-        return () => {
-            document.getElementById('quran-read-section').removeEventListener('scroll', ditectAcitiveAyahs)
+        const section_id = document.getElementById('quran-read-section') ?? null;
+        if(section_id){
+            section_id.addEventListener('scroll', ditectAcitiveAyahs);
+            return () => {
+                section_id.removeEventListener('scroll', ditectAcitiveAyahs)
+            }
         }
+
     });
 
     useEffect(() => {

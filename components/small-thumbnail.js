@@ -21,7 +21,7 @@ export default function SmallThumbnail(props){
                 </div>
 
                 <div className="basis-7/12 px-2 space-y-[3px]">
-                    <h1>{data?.title}</h1>
+                    <h1 className={'line-clamp-2'}>{data?.title}</h1>
                     <p className="text-[14px]  text-gray-500">ক্যাটাগরি নাম</p>
                     <div className="flex space-x-2">
                         <p className="text-gray-500 text-[12px]">২৫ জন দেখেছে</p>

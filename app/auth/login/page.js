@@ -12,9 +12,9 @@ import AppContext from '../../../context/AppContext'
 import {Loader2} from "lucide-react";
 import {setToken} from "../../../lib/server-utils";
 import {useRouter} from "next/navigation";
+import {BG_IMAGE} from "../../../lib/utils";
 
 export default function Page(){
-    const bg_image = 'https://png.pngtree.com/png-vector/20230302/ourmid/pngtree-luxury-ramadan-ramazan-with-ramadhan-lantern-ornamental-islamic-background-banner-jumma-vector-png-image_6627060.png'
     const {setUser, redirectPath} = useContext(AppContext)
     const {toast} = useToast()
     const router = useRouter()
@@ -80,7 +80,7 @@ export default function Page(){
     }
 
     return <>
-        <div style={{backgroundImage: `url('${bg_image}')`}} className="flex bg-no-repeat bg-cover flex-col justify-center items-center mt-12 lg:mt-0 lg:h-full w-full">
+        <div style={{backgroundImage: `url('${BG_IMAGE}')`}} className="flex bg-no-repeat bg-cover flex-col justify-center items-center mt-12 lg:mt-0 lg:h-full w-full">
             <div style={{background: 'rgba(255,255,255, 0.9)'}} className="md:w-1/3 shadow-lg w-10/12 flex p-3 flex-col">
                 <h1 className='text-[28px] font-bold'>লগ-ইন করুন</h1>
                 <p className='mb-4 mt-2 text-gray-600'>অ্যাপটির মাধ্যমে ওয়াচ হিস্টরি, লাইককৃত ভিডিও দেখতে, প্লে-লিস্ট তৈরি করতে এবং একাউন্ট এর ভিবিন্ন সেটিংস পরিবর্তন করার জন্য।</p>

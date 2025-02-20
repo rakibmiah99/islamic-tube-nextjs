@@ -9,10 +9,10 @@ import {Loader2} from "lucide-react";
 import {Label} from "../../components/ui/label"
 import {Input} from "../../components/ui/input"
 import {useToast} from "../../hooks/use-toast";
+import {BG_IMAGE} from "../../lib/utils";
 
 export default function Page(){
     const {user, setUser} = useContext(AppContext);
-    const bg_image = 'https://png.pngtree.com/png-vector/20230302/ourmid/pngtree-luxury-ramadan-ramazan-with-ramadhan-lantern-ornamental-islamic-background-banner-jumma-vector-png-image_6627060.png'
     const {toast} = useToast()
     const [loading, setLoading] = useState(false)
     const [userFormData, setUserFormData] = useState({
@@ -77,7 +77,7 @@ export default function Page(){
         <AuthProvider>
 
             <div
-                style={{backgroundImage: `url('${bg_image}')`}}
+                style={{backgroundImage: `url('${BG_IMAGE}')`}}
                 className="flex bg-no-repeat bg-cover flex-col  items-center mt-12 lg:mt-0 lg:h-full w-full"
             >
                 <div style={{background: 'rgba(255,255,255, 0.9)'}} className="shadow-lg h-full flex px-3 pb-3 flex-col">
