@@ -29,7 +29,7 @@ export default function Page(props) {
   const isFetchingCommentRef = useRef(false);
   const videoIdRef = useRef(null);
   const videoProviderRef = useRef(null);
-  const [videoInfo, setVideoInfo] = useState({});
+  const [videoInfo, setVideoInfo] = useState(null);
   const [relatedVideos, setRelatedVideos] = useState({
     loading: true,
     error: null,
