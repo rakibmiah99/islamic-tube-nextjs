@@ -1,6 +1,7 @@
 import {AspectRatio} from "./ui/aspect-ratio";
 import Image from "next/image";
 import Link from "next/link";
+import {formatNumber} from "../lib/utils";
 
 export default function SmallThumbnail(props){
     const data = props.data;
@@ -24,7 +25,7 @@ export default function SmallThumbnail(props){
                     <h1 className={'line-clamp-2'}>{data?.title}</h1>
                     <p className="text-[14px]  text-gray-500">ক্যাটাগরি নাম</p>
                     <div className="flex space-x-2">
-                        <p className="text-gray-500 text-[12px]">২৫ জন দেখেছে</p>
+                        <p className="text-gray-500 text-[12px]">{data.watch_count == 0 ? "দেখার অপেক্ষায়" : formatNumber(data.watch_count)+" বার দেখা হয়েছে"}</p>
                         <p className="text-gray-500 text-[12px]">-</p>
                         <p className="text-gray-500 text-[12px]">২০ দিন আগে</p>
                     </div>
