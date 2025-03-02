@@ -15,7 +15,7 @@ import Player from "../../../components/player";
 import {useState, useEffect, useRef, useCallback, useMemo} from "react";
 import requestData from "../../../lib/api";
 import Drawer from "@/components/ui/drawer";
-import {formatNumber} from "../../../lib/utils";
+import {formatNumber, relativeTimeFormat} from "../../../lib/utils";
 import {WatchPageSkeleton} from "../../../components/skeleton/watch-page-skeleton";
 import {LikeButton} from "../../../components/watch/like-button";
 import {DislikeButton} from "../../../components/watch/dislike-button";
@@ -193,7 +193,8 @@ export default function Page(props) {
               {formatNumber(videoInfo?.watch_count + 1)} বার ভিডিওটি দেখা হয়েছে
             </div>
             <div className="watch-count flex items-center text-gray-600 text-sm">
-              <LuCalendar className="me-1" />২ বছর আগের ভিডিও
+              <LuCalendar className="me-1" />
+              {relativeTimeFormat(videoInfo.published_at)}
             </div>
           </div>
 

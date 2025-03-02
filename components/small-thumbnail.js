@@ -1,7 +1,7 @@
 import {AspectRatio} from "./ui/aspect-ratio";
 import Image from "next/image";
 import Link from "next/link";
-import {formatNumber} from "../lib/utils";
+import {formatNumber, relativeTimeFormat} from "../lib/utils";
 
 export default function SmallThumbnail(props){
     const data = props.data;
@@ -27,7 +27,7 @@ export default function SmallThumbnail(props){
                     <div className="flex space-x-2">
                         <p className="text-gray-500 text-[12px]">{data.watch_count == 0 ? "দেখার অপেক্ষায়" : formatNumber(data.watch_count)+" বার দেখা হয়েছে"}</p>
                         <p className="text-gray-500 text-[12px]">-</p>
-                        <p className="text-gray-500 text-[12px]">২০ দিন আগে</p>
+                        <p className="text-gray-500 text-[12px]">{relativeTimeFormat(data.published_at)}</p>
                     </div>
                 </div>
             </div>
