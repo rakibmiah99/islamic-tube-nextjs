@@ -1,6 +1,5 @@
 import {useContext, useState} from "react";
 import requestData from "../../lib/api";
-import {Loader2} from "lucide-react";
 import {LuSave} from "react-icons/lu";
 import {toast} from "sonner";
 import {Button} from "../ui/button";
@@ -11,7 +10,7 @@ import {Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Dia
 import {Checkbox} from "../ui/checkbox";
 import {PlayListPrototype} from "../../lib/data-prototype";
 export function SaveButton({videoInfo}){
-    const [loading, setLoading] = useState(false);
+    // const [loading, setLoading] = useState(false);
     const [playList, setPlayList] = useState([]);
     const {user} = useContext(AppContext);
 
@@ -82,7 +81,6 @@ export function SaveButton({videoInfo}){
         <Dialog>
             <DialogTrigger>
                 <Button
-                    disabled={loading}
                     onClick={getPlayList}
                     variant={'secondary'}
                     className="flex items-center w-full justify-center"
