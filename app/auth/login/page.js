@@ -6,7 +6,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import Link from "next/link";
 import {Button} from "../../../components/ui/button";
 import {useContext, useState} from "react";
-import { useToast } from "@/hooks/use-toast"
+import { toast } from "sonner"
 import requestData from "../../../lib/api";
 import AppContext from '../../../context/AppContext'
 import {Loader2} from "lucide-react";
@@ -16,7 +16,6 @@ import {BG_IMAGE} from "../../../lib/utils";
 
 export default function Page(){
     const {setUser, redirectPath} = useContext(AppContext)
-    const {toast} = useToast()
     const router = useRouter()
 
     const [checked, setChecked] = useState(false)
@@ -43,18 +42,12 @@ export default function Page(){
 
     const handleLogin = async () => {
         if (!credential.email){
-            toast({
-                variant: "destructive",
-                title: "দুঃখিত আপনার ইমেইল এর তধ্য প্রদান করেন নি।",
-            })
+            toast.error("দুঃখিত আপনার ইমেইল এর তধ্য প্রদান করেন নি।")
             return;
         }
 
         if (!credential.password){
-            toast({
-                variant: "destructive",
-                title: "দুঃখিত আপনার পাসওয়ার্ড এর তধ্য প্রদান করেন নি।",
-            })
+            toast.error("দুঃখিত আপনার পাসওয়ার্ড এর তধ্য প্রদান করেন নি।")
             return;
         }
 
@@ -73,9 +66,7 @@ export default function Page(){
             await setToken(data.token)
             setUser(() => data)
             router.push(redirectPath)
-            toast({
-                description: response.message
-            })
+            toast.success(response.message)
         }
     }
 

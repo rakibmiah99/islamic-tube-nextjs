@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/app-sidebar"
-import { Toaster } from "@/components/ui/toaster"
+import { Toaster } from "@/components/ui/sonner"
 import {Providers} from "@/providers/providers";
 // Hind_Siliguri, Tiro_Bangla
 import {Noto_Sans_Bengali} from 'next/font/google'
@@ -49,7 +49,7 @@ export default function RootLayout({
             </main>
         </SidebarProvider>
 
-        <Toaster />
+        <Toaster richColors />
     </Providers>
 
     </body>

@@ -21,6 +21,7 @@ import {LikeButton} from "../../../components/watch/like-button";
 import {DislikeButton} from "../../../components/watch/dislike-button";
 import {CommentAction} from "../../../components/watch/comment-action";
 import {CommentProtoType, RelatedVideoProtoType, VideoInfoProtoType} from "../../../lib/data-prototype";
+import {SaveButton} from "../../../components/watch/save-button";
 
 export default function Page(props) {
   const loadMoreRelatedTokenRef = useRef(null);
@@ -212,13 +213,7 @@ export default function Page(props) {
               শেয়ার
             </Button>
 
-            <Button
-              variant="secondary"
-              className="flex items-center justify-center"
-            >
-              <LuSave className="me-1" />
-              সংরক্ষন
-            </Button>
+            <SaveButton videoInfo={videoInfo}/>
 
             <Button
               variant="secondary"
