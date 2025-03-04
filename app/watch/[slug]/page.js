@@ -21,6 +21,7 @@ import {DislikeButton} from "../../../components/watch/dislike-button";
 import {CommentAction} from "../../../components/watch/comment-action";
 import {CommentProtoType, RelatedVideoProtoType, VideoInfoProtoType} from "../../../lib/data-prototype";
 import {SaveButton} from "../../../components/watch/save-button";
+import {AspectRatio} from "@radix-ui/react-aspect-ratio";
 
 export default function Page(props) {
   const loadMoreRelatedTokenRef = useRef(null);
@@ -175,21 +176,25 @@ export default function Page(props) {
     <>
       <div className="md:flex">
         <div className="basis-8/12 space-y-3 md:pe-3">
-          <div
-            className={!state.videoPlay ? 'player md:h-[450px] h-[200px]': 'player'}
-            style={{
-              backgroundImage: !state.videoPlay
-                ? `url(${videoInfo?.thumbnail})`
-                : "",
-              backgroundSize: "cover",
-            }}
-          >
-            {memoizedPlayer}
-          </div>
+
+          <AspectRatio ratio={16 / 9}>
+            <div
+                className={!state.videoPlay ? 'player h-full' : 'player'}
+                style={{
+                  backgroundImage: !state.videoPlay
+                      ? `url(${videoInfo?.thumbnail})`
+                      : "",
+                  backgroundSize: "cover",
+                }}
+            >
+              {memoizedPlayer}
+            </div>
+          </AspectRatio>
+
           <h1 className="text-lg font-semibold">{videoInfo?.title}</h1>
           <div className="flex space-x-4">
             <div className="watch-count flex items-center text-gray-600 text-sm">
-              <LuClock className="me-1" />
+              <LuClock className="me-1"/>
               {formatNumber(videoInfo?.watch_count + 1)} বার ভিডিওটি দেখা হয়েছে
             </div>
             <div className="watch-count flex items-center text-gray-600 text-sm">
