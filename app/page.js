@@ -5,6 +5,7 @@ import {useEffect, useState, useRef, useCallback} from "react";
 import requestData from "@/lib/api";
 import Link from "next/link";
 import {ThumbnailCardSkeleton} from "../components/skeleton/thumbnail-card-skeleton";
+import {VideosProtoType} from "../lib/data-prototype";
 
 
 export default function Home() {
@@ -24,9 +25,9 @@ export default function Home() {
         isFetching.current = true;
 
         try {
-            setVideos((prevVideos) => ({
+            setVideos((prevState) => ({
                 loading: true,
-                data: prevVideos.data,
+                data: prevState.data
             }))
 
             const response_data = await requestData('/videos', {
@@ -38,9 +39,12 @@ export default function Home() {
 
             nextOffsetRef.current = response_data.figure.query.next_offset;
 
+            let loadedVideosData = response_data.figure.data;
+            console.log(loadedVideosData)
+            loadedVideosData = loadedVideosData.map((item) => VideosProtoType(item));
             setVideos((prevVideos) => ({
                 loading: false,
-                data: [...prevVideos.data, ...response_data.figure.data],
+                data: [...prevVideos.data, ...loadedVideosData],
             }))
         }
         finally {

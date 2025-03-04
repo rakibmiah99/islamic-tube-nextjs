@@ -15,7 +15,7 @@ export default function ThumbnailCard(props) {
         <Card  className={props.className}>
             <CardContent className='p-0'>
                 <AspectRatio ratio={16 / 9}>
-                    <Image layout='fill' src={data.thumbnail} alt={data.title} className="rounded-md object-cover" />
+                    <Image layout='fill' src={data.thumbnail_md} alt={data.title} className="rounded-md object-cover" />
                 </AspectRatio>
                 <div className='py-3 px-1 pb-1'>
                     <CardTitle className='text-md font-normal line-clamp-2'>{data.title}</CardTitle>

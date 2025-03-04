@@ -1,17 +1,32 @@
 import {useContext, useState} from "react";
 import requestData from "../../lib/api";
-import {LuSave} from "react-icons/lu";
+import {LuPlus, LuSave} from "react-icons/lu";
 import {toast} from "sonner";
 import {Button} from "../ui/button";
 import AppContext from "../../context/AppContext";
 import {UnauthenticatedModal} from "../auth/unauthenticated-modal";
 import {AuthProvider} from "../../providers/auth-provider";
-import {Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger} from "../ui/dialog";
+
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger
+} from "../ui/dialog";
 import {Checkbox} from "../ui/checkbox";
+import {Input} from "../ui/input";
 import {PlayListPrototype} from "../../lib/data-prototype";
+import {Loader2, X} from "lucide-react";
+import * as React from "react";
 export function SaveButton({videoInfo}){
     // const [loading, setLoading] = useState(false);
+    const [creatingPlayListLoading, setCreatingPlayListLoading] = useState(false);
     const [playList, setPlayList] = useState([]);
+    const [playListName, setPlayListName] = useState("");
+    const [secondDialogOpen, setSecondDialogOpen] = useState(false);
     const {user} = useContext(AppContext);
 
     const getPlayList = async () => {
@@ -58,7 +73,25 @@ export function SaveButton({videoInfo}){
 
         if(result){
             toast.success(result.message)
-            getPlayList()
+            await getPlayList()
+        }
+    }
+
+
+    const handleSavePlaylist = async () => {
+        setCreatingPlayListLoading(true)
+        const result = await requestData('/user/playlist/create', {
+            method: "POST",
+            data: {
+                name: playListName
+            }
+        })
+        setCreatingPlayListLoading(false)
+
+        if(result){
+            toast.success(result.message)
+            await getPlayList()
+            setSecondDialogOpen(false)
         }
     }
 
@@ -66,7 +99,7 @@ export function SaveButton({videoInfo}){
     if (!user){
         return <UnauthenticatedModal
             trigger={
-            <Button variant={'secondary'}>
+            <Button variant='secondary'>
                 <LuSave className="me-1" />
                 সংরক্ষন
             </Button>
@@ -77,39 +110,81 @@ export function SaveButton({videoInfo}){
 
 
     return <>
-
         <Dialog>
-            <DialogTrigger>
+            <DialogTrigger asChild>
                 <Button
                     onClick={getPlayList}
-                    variant={'secondary'}
+                    variant='secondary'
                     className="flex items-center w-full justify-center"
                 >
                     <LuSave className="me-1" /> সংরক্ষন
                 </Button>
             </DialogTrigger>
-            <DialogContent className={'w-auto'}>
-                <DialogHeader>
-                    <DialogTitle className={'me-10 text-sm'}>ভিডিও সংরক্ষণ করুন</DialogTitle>
-                    <DialogDescription>
-                        {playList.map((item, index) => {
-                            const id = item.name.split(" ").join("-")
-                            return (
-                                <div key={index} className="items-top flex mt-3 space-x-2">
-                                    <Checkbox checked={item.video_in_list} onCheckedChange={(checked) => handleSaveHandle(checked, item)} id={id}/>
-                                    <div className="grid gap-1.5 leading-none">
-                                        <label
-                                            htmlFor={id}
-                                            className="text-sm font-medium text-black"
-                                        >
-                                            {item.name}
-                                        </label>
-                                    </div>
-                                </div>
-                            )
-                        })}
-                    </DialogDescription>
+            <DialogContent closeIcon={false} className={'w-auto'}>
+                <DialogHeader >
+                    <DialogTitle className={' flex justify-between items-center text-lg'}>
+                       <span className={'me-10'}> ভিডিও সংরক্ষণ করুন</span>
+
+                        <DialogClose asChild>
+                            <X className="h-6 w-6 hover:cursor-pointer" />
+                        </DialogClose>
+
+                    </DialogTitle>
+                    <DialogDescription> </DialogDescription>
                 </DialogHeader>
+
+                {playList.map((item, index) => {
+                    const id = item.name.split(" ").join("-")
+                    return (
+                        <div key={index} className="flex  space-x-2">
+                            <Checkbox checked={item.video_in_list} onCheckedChange={(checked) => handleSaveHandle(checked, item)} id={id}/>
+                            <div className="grid gap-1.5 leading-none">
+                                <label
+                                    htmlFor={id}
+                                    className="text-md font-medium text-black"
+                                >
+                                    {item.name}
+                                </label>
+                            </div>
+                        </div>
+                    )
+                })}
+
+
+                <Button
+                    onClick={() => setSecondDialogOpen(true)}
+                    variant='outline'
+                    className="flex items-center mt-5 px-2 py-1 w-full justify-center"
+                >
+                    <LuPlus className="me-1" /> নতুন তৈরি করুন
+                </Button>
+            </DialogContent>
+        </Dialog>
+
+
+
+        <Dialog open={secondDialogOpen} onOpenChange={setSecondDialogOpen}>
+            <DialogContent className={'flex justify-center'} closeIcon={false}>
+                <DialogTitle></DialogTitle>
+                <div className="flex w-full max-w-sm items-center space-x-2">
+                    <Input onChange={(e) => setPlayListName(e.target.value) } type="text" placeholder="প্লে লিস্ট এর নাম লিখুন"/>
+                    <Button onClick={handleSavePlaylist} type="button">
+                        {
+                            creatingPlayListLoading?
+                                <>
+                                    <Loader2 className="animate-spin" />
+                                </>
+                                :
+                                <> সেভ করুন</>
+                        }
+
+                    </Button>
+                    <DialogClose asChild>
+                        <Button type="button" variant='destructive'>
+                            <X className="h-6 w-6" />
+                        </Button>
+                    </DialogClose>
+                </div>
             </DialogContent>
         </Dialog>
     </>

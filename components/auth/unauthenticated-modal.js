@@ -9,7 +9,7 @@ import {
 
 export function UnauthenticatedModal({trigger, content, title}){
     return <Dialog>
-        <DialogTrigger className="p-0 bg-secondary rounded-md">
+        <DialogTrigger asChild className="p-0 bg-secondary rounded-md">
             {trigger}
         </DialogTrigger>
         <DialogContent>
