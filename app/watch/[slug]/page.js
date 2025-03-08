@@ -22,6 +22,7 @@ import {CommentAction} from "../../../components/watch/comment-action";
 import {CommentProtoType, RelatedVideoProtoType, VideoInfoProtoType} from "../../../lib/data-prototype";
 import {SaveButton} from "../../../components/watch/save-button";
 import {AspectRatio} from "@radix-ui/react-aspect-ratio";
+import VideoPlaylist from '../../../components/playlist/playlist';
 
 export default function Page(props) {
   const loadMoreRelatedTokenRef = useRef(null);
@@ -52,6 +53,8 @@ export default function Page(props) {
     const response = await requestData("/video/" + props.params.slug);
     isFetchingRef.current = false;
     const figure = response?.figure;
+
+    // console.log(response);
 
     // Set Video Info State Data
     setVideoInfo(() => VideoInfoProtoType(figure));
@@ -170,22 +173,28 @@ export default function Page(props) {
       <Player video_id={videoIdRef.current} provider={videoProviderRef.current} setState={setState} />
   ), [videoIdRef.current, videoProviderRef.current]);
 
-  return (!videoInfo ?
-        <WatchPageSkeleton/>
-    :
+ 
+  console.log(window.location.search);
+
+  const params = new URLSearchParams(window.location.search);
+  const playList = params.get("plst");
+  // console.log(relatedVideos);
+
+  return !videoInfo ? (
+    <WatchPageSkeleton />
+  ) : (
     <>
       <div className="md:flex">
         <div className="basis-8/12 space-y-3 md:pe-3">
-
           <AspectRatio ratio={16 / 9}>
             <div
-                className={!state.videoPlay ? 'player h-full' : 'player'}
-                style={{
-                  backgroundImage: !state.videoPlay
-                      ? `url(${videoInfo?.thumbnail})`
-                      : "",
-                  backgroundSize: "cover",
-                }}
+              className={!state.videoPlay ? "player h-full" : "player"}
+              style={{
+                backgroundImage: !state.videoPlay
+                  ? `url(${videoInfo?.thumbnail})`
+                  : "",
+                backgroundSize: "cover",
+              }}
             >
               {memoizedPlayer}
             </div>
@@ -194,7 +203,7 @@ export default function Page(props) {
           <h1 className="text-lg font-semibold">{videoInfo?.title}</h1>
           <div className="flex space-x-4">
             <div className="watch-count flex items-center text-gray-600 text-sm">
-              <LuClock className="me-1"/>
+              <LuClock className="me-1" />
               {formatNumber(videoInfo?.watch_count + 1)} বার ভিডিওটি দেখা হয়েছে
             </div>
             <div className="watch-count flex items-center text-gray-600 text-sm">
@@ -204,10 +213,9 @@ export default function Page(props) {
           </div>
 
           <div className="grid md:grid-cols-6 lg:grid-8 grid-cols-3 gap-2">
+            <LikeButton videoInfo={videoInfo} setVideoInfo={setVideoInfo} />
 
-            <LikeButton videoInfo={videoInfo} setVideoInfo={setVideoInfo}/>
-
-            <DislikeButton videoInfo={videoInfo} setVideoInfo={setVideoInfo}/>
+            <DislikeButton videoInfo={videoInfo} setVideoInfo={setVideoInfo} />
 
             <Button
               variant="secondary"
@@ -217,7 +225,7 @@ export default function Page(props) {
               শেয়ার
             </Button>
 
-            <SaveButton videoInfo={videoInfo}/>
+            <SaveButton videoInfo={videoInfo} />
 
             <Button
               variant="secondary"
@@ -248,7 +256,7 @@ export default function Page(props) {
                   placeholder="আপনার মতামত..."
                   className="w-full border p-2 mt-3"
                 ></textarea>
-                <Button variant=""  disabled className="mt-2 w-full">
+                <Button variant="" disabled className="mt-2 w-full">
                   সাবমিট
                 </Button>
 
@@ -270,7 +278,11 @@ export default function Page(props) {
               <span>{formatNumber(videoInfo?.comments_count)} টি মতামতঃ</span>
             </h2>
 
-            <CommentAction videoInfo={videoInfo} setComments={setComments} setVideoInfo={setVideoInfo}/>
+            <CommentAction
+              videoInfo={videoInfo}
+              setComments={setComments}
+              setVideoInfo={setVideoInfo}
+            />
 
             <hr />
 
@@ -284,6 +296,9 @@ export default function Page(props) {
           </div>
         </div>
         <div className="basis-4/12">
+          {playList && (
+            <VideoPlaylist />
+          )}
           {relatedVideos.data.map((item, index) => (
             <SmallThumbnail
               data={item}

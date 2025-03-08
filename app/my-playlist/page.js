@@ -17,6 +17,7 @@ import { LuPencil, LuTrash } from "react-icons/lu";
 import { Dialog, DialogContent } from "../../components/ui/dialog";
 import { Button } from "../../components/ui/button";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Page() {
   const [playlist, setPlaylist] = useState([]);
@@ -87,7 +88,11 @@ export default function Page() {
 
       <div className="py-3 play-list-area flex">
         {playlist.map((item, index) => (
-          <div key={index} className="basis-1/5 aspect-video play-list-item">
+          <Link
+            href={`/watch/6-koti-45-lksh-taka-tran-deya-sesh-hlo-sheikh-ahmadullah?plSl=${"6-koti-45-lksh-taka-tran-deya-sesh-hlo-sheikh-ahmadullah"}&plst=${true}`}
+            key={index}
+            className="basis-1/5 aspect-video play-list-item"
+          >
             <div className="p-2  ">
               <div className="space-y-3">
                 <div className="rounded overflow-hidden relative">
@@ -144,7 +149,7 @@ export default function Page() {
                 </div>
               </div>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
 
