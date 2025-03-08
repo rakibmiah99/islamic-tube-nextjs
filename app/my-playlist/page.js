@@ -88,35 +88,42 @@ export default function Page() {
 
       <div className="py-3 play-list-area flex">
         {playlist.map((item, index) => (
-          <Link
-            href={`/watch/6-koti-45-lksh-taka-tran-deya-sesh-hlo-sheikh-ahmadullah?plSl=${"6-koti-45-lksh-taka-tran-deya-sesh-hlo-sheikh-ahmadullah"}&plst=${true}`}
+          <div
+            // href={`/watch/6-koti-45-lksh-taka-tran-deya-sesh-hlo-sheikh-ahmadullah?plSl=${"6-koti-45-lksh-taka-tran-deya-sesh-hlo-sheikh-ahmadullah"}&plst=${true}`}
             key={index}
             className="basis-1/5 aspect-video play-list-item"
           >
             <div className="p-2  ">
               <div className="space-y-3">
                 <div className="rounded overflow-hidden relative">
-                  <AspectRatio ratio={16 / 9}>
-                    <Image
-                      src={
-                        item.thumbnail ??
-                        "https://www.ungerglobal.com/en/products/static/version1734619323/frontend/Unger/default/en_US/Sunzinet_GDPR/images/youtube-cover.png"
-                      }
-                      alt="avatar"
-                      width="1000"
-                      height="1000"
-                      className="object-contain"
-                    />
-                  </AspectRatio>
-
-                  <span className="p-1 px-2 bg-black text-white absolute right-0 bottom-0 rounded-tl opacity-70">
-                    <MdOutlinePlaylistPlay className="inline-block" />
-                    {formatNumber(item.total_videos)} টি ভিডিও
-                  </span>
+                  <Link
+                    href={`/watch/6-koti-45-lksh-taka-tran-deya-sesh-hlo-sheikh-ahmadullah?plSl=${"6-koti-45-lksh-taka-tran-deya-sesh-hlo-sheikh-ahmadullah"}&plst=${true}`}
+                  >
+                    <AspectRatio ratio={16 / 9}>
+                      <Image
+                        src={
+                          item.thumbnail ??
+                          "https://www.ungerglobal.com/en/products/static/version1734619323/frontend/Unger/default/en_US/Sunzinet_GDPR/images/youtube-cover.png"
+                        }
+                        alt="avatar"
+                        width="1000"
+                        height="1000"
+                        className="object-contain"
+                      />
+                    </AspectRatio>
+                    <span className="p-1 px-2 bg-black text-white absolute right-0 bottom-0 rounded-tl opacity-70">
+                      <MdOutlinePlaylistPlay className="inline-block" />
+                      {formatNumber(item.total_videos)} টি ভিডিও
+                    </span>
+                  </Link>
                 </div>
 
                 <div className="flex justify-between items-center">
-                  <p className="text-md font-semibold">{item.name}</p>
+                  <Link
+                    href={`/watch/6-koti-45-lksh-taka-tran-deya-sesh-hlo-sheikh-ahmadullah?plSl=${"6-koti-45-lksh-taka-tran-deya-sesh-hlo-sheikh-ahmadullah"}&plst=${true}`}
+                  >
+                    <p className="text-md font-semibold">{item.name}</p>
+                  </Link>
                   <DropdownMenu>
                     <DropdownMenuTrigger>
                       <BsThreeDotsVertical />
@@ -149,7 +156,7 @@ export default function Page() {
                 </div>
               </div>
             </div>
-          </Link>
+          </div>
         ))}
       </div>
 
